@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "name": "BrianBondy",
+  "description": "brianbondy.com blog!",
+  "icons": {
+    "16": "http://ed.agadak.net/favicon.ico",
+    "48": "http://ed.agadak.net/favicon.ico",
+    "128": "http://ed.agadak.net/favicon.ico"
+  },
+  "developer": {
+    "name": "Brian R. Bondy",
+    "url": "http://brianbondy.com"
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en"
+}
+
+
