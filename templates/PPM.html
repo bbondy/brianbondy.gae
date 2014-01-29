@@ -1,0 +1,16 @@
+{% extends "compression.html" %}
+{% block title %}Compression - Prediction by partial matching{% endblock %}
+{% block pagetitle %}Brian R. Bondy - Prediction by partial matching{% endblock %}
+{% block subtitle %}Adaptive statistical data compression{% endblock %}
+
+{% block main_content %}
+<h2>What is PPM?</h2>
+<div class='bold-divider'></div>
+<p>
+PPM uses the last n symbols of source data to predict the next symbol in the stream.  Like adaptive Huffman compression, PPM is an adaptive algorithm which gains information about the source data as it encodes. 
+</p>
+<p>All implementation details of PPM are not constant</p>
+</p>
+<p>Newer versions of PPM with extra optimizations are known as the PAQ series of data compression algorithms.</p>
+
+{% endblock %}

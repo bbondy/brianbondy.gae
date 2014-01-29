@@ -1,0 +1,87 @@
+{% extends "khanacademy.html" %}
+{% block title %} Khan Academy Development Cheat Sheet{% endblock %}
+{% block pagetitle %}Brian R. Bondy - Khan Academy Development Cheat Sheet{% endblock %}
+{% block subtitle %} Google App Engine, Exercises, and more {% endblock %}
+{% block body_id %}body_khanacademy{% endblock %}
+
+{% block main_content %}
+
+<h2>Repositories</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>stable trunk (Latest):<br> 
+<a href='https://khanacademy.kilnhg.com/Repo/Website/Group/stable'>https://khanacademy.kilnhg.com/Repo/Website/Group/stable</a>
+</li>
+
+</ul>
+
+<h2>Deploying</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>To deploy:<br>
+  python deploy/deploy.py --no-secrets --force</li>
+  <li>To deploy to the live site:<br>
+  Create the secrets file first with the keys, then:
+  python deploy/deploy.py</li>
+</ul>
+
+<h2>Useful links</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li><a href='https://sites.google.com/a/khanacademy.org/forge/for-developers'>Khan developer guide</a></li>
+  <li><a href='https://github.com/Khan/khan-exercises'>Khan exercise tutorial</a></li>
+</ul>
+
+<h2>Bug Tracking</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>
+  <a href='http://code.google.com/p/khanacademy/issues/list?can=2&q=&sort=-opened&colspec=ID%20Type%20Component%20Status%20Stars%20Owner%20Summary%20Modified%20Opened'>Most recent opened bug list</a>
+  </li>
+  <li>
+  <a href='http://code.google.com/p/khanacademy/issues/list?can=2&q=-Component%3AVideos+-Component%3AQbrary&colspec=ID+Type+Component+Status+Stars+Owner+Summary+Modified&cells=tiles'>List of open issues for code</a>
+  </li>
+  <li><a href='http://code.google.com/p/khanacademy/issues/list?can=2&q=Component%3AVideos&colspec=ID+Type+Component+Status+Stars+Owner+Summary+Modified&cells=tiles'>List of open issues for video</a>
+  </li>
+  <li>
+  <a href='http://code.google.com/p/khanacademy/issues/list?can=2&q=is:starred&colspec=ID+Type+Component+Status+Stars+Owner+Summary+Modified&cells=tiles'>My Stared issues</a>
+  </li>
+</ul>
+
+<h2>Newsgroups</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li><a href='http://groups.google.com/group/khanacademy-developers'>Developer discussing group</a></li>
+
+  <li><a href='http://groups.google.com/group/khan-academy-topic-ideas'>Topic ideas</a></li>
+  <li><a href='http://groups.google.com/group/khan-academy-feature-requests'>Feature requests</a></li>
+  <li><a href='http://groups.google.com/group/khan-academy-developer-notifications'>Developer notification group for commits and reviews</a></li>
+  <li><a href='http://code.google.com/feeds/p/khanacademy/updates/basic'>Developer notification RSS feed</a></li>
+</ul>
+
+<h2>Coding style</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>indenting: 4 spaces (no tabs)</li>
+<li>Javascript:<br>
+<ul><li><a href='http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml'>Google style guide</a></li>
+  <li>Goog example page 1: javascript/shared-package/discussion.js</li>
+  <li>Good example page 2: javascript/shared-package/pageutil.js</li>
+</ul></li>
+<li>Python:<br>
+<ul><li><a href='http://google-styleguide.googlecode.com/svn/trunk/pyguide.html'>Google style guide</a></li></ul>
+</li>
+</ul>
+
+<h2>Setup</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Sync local data in: <br>http://localhost:8080/admin/youtubesync?start=1</li>
+<li>Recent changes in: <br>sample_data\sample_data.py upload</li>
+<li>Automate loading exercises in: <br>sample_data\load_exercises.rb http://localhost:8080</li>
+<li>Manually load in exercises:  <br>http://localhost:8080/admin94040 use name addition_1 for addition_1.html</li>
+<li>Expire cache manually: <br>http://localhost:8080/library_content</li>
+</ul>
+
+{% endblock %}
+  

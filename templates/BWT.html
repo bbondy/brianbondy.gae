@@ -1,0 +1,16 @@
+{% extends "compression.html" %}
+{% block pagetitle %}Brian R. Bondy - Burrows-Wheeler Transform{% endblock %}
+{% block title %}Compression - Burrows-Wheeler Transform{% endblock %}
+{% block subtitle %}Block sorting compression{% endblock %}
+
+
+{% block main_content %}
+<h2>Lossless data compression</h2>
+<div class='bold-divider'></div>
+
+<p>
+Burrows-Wheeler transform is not actually a data compression algorithm, but it instead is a data transformation algorithm.  The algorithm will transfer your input data to a format that is much easier for other compression algorithms to take advantage of.
+</p>
+
+<p>It does this by re-arranging the data so that duplicate parts appear in a row.  For example you will have many 'T' character's in a row instead of spread all over the place.</p>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block pagetitle %}Brian R. Bondy - About{% endblock %}
+{% block title %}Button {% endblock %}
+{% block subtitle %}Flipping the coin...{% endblock %}
+{% block body_id %}body_button{% endblock %}
+
+{% block main_content %}
+<h2>Here's a button, maybe you should click it?</h2>
+<div class='bold-divider'></div>
+
+<p>
+The rc value is: {{rc}}
+</p>
+<p>
+The button:<br\>
+<a href='/button/thanks/'><img width='500' height'500' src='/static/img/button/{{ images|random }}' /></a>
+</p>
+{% endblock %}
+

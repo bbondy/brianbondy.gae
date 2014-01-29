@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% load markup %}
+{% load mytags %}
+
+{% block title %} {{pagetitle}} {% endblock %}
+{% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
+{% block subtitle %} News and other things I find interesting {% endblock %}
+{% block body_id %}body_blog{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script src="http://html5.kaltura.org/js"></script>
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript">
+$(document.body).load(function () {
+  $(".comments").slideUp();
+});
+
+function styleCode()
+{
+$("pre code").parent().each(
+  function() {
+    if(!$(this).hasClass("prettyprint")) {
+      $(this).addClass("prettyprint");
+      prettyPrint();
+    }
+  });
+}
+
+function toggleAddComment(newsID)
+{
+  $("#AddComment-" + newsID).slideToggle();
+  $("#Comments-" + newsID).slideUp();
+}
+
+function toggleComments(newsID)
+{
+  $("#Comments-" + newsID).slideToggle();
+  $("#AddComment-" + newsID).slideUp();
+}
+
+function toggleTags()
+{
+  $("#sidebar3").slideToggle();
+  if($("#tag-label").text().indexOf(">>") != -1)
+    $("#tag-label").text($("#tag-label").text().replace(">>", "<<"));
+  else
+    $("#tag-label").text($("#tag-label").text().replace("<<", ">>"));
+}
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+ <a href="/feeds/rss/"><img border="0" src="/static/img/rss2.png" alt="RSS Feed" width="80" height="15" /></a>
+ <br><br><br>
+
+{% for news_item in news_item_list %}
+
+<div id="post">
+  <div id="post-date">
+    <div id="post-month">
+      <span>{{news_item.posted_date|date:"b"|lower|capfirst}}</span>
+    </div>
+    <div id="post-day">
+      <span>{{news_item.posted_date.day}}</span>
+    </div>
+    <div id="post-year">
+      <span>{{news_item.posted_date.year}}</span>
+    </div>
+  </div>
+<div id="post-content">
+
+<h2><a href="/blog/id/{{news_item.id}}/{{news_item.title|lower|slugify}}">{{ news_item.title }}</a></h2>
+<h3>
+  Last modified: {{ news_item.last_modified_date|date:"l, F d, Y"}}
+</h3>
+
+<div class='bold-divider'></div>
+  <div class="blog-body">
+    {% autoescape off %}
+     <p>{{ news_item.markdown_body}}</p>
+    {% endautoescape %}
+  </div>
+  <p>
+    <span style="float:right">
+     <a rel="nofollow" href="{{news_item.twitter_link}}{{news_item.title|escape}}%20%40brianbondy%20{{news_item.linkback|escape}}"><img border="0" width="20" height="20" src="/static/img/twitter-icon.png" /></a>
+      <a rel="nofollow" href="{{news_item.facebook_link}}{{news_item.linkback|escape}}&t={{news_item.title|escape}}"><img border="0" width="20" height="20" src="/static/img/facebook-icon.jpg" /></a>
+      <g:plusone href="http://www.brianbondy.com/blog/id/{{news_item.id}}/{{news_item.title|lower|slugify}}" size="medium" />
+      </g:plusone>
+    </span>
+
+    {% if news_item.tags.count > 0 %}
+    <p>
+    Tags:
+    {% for nit in news_item.tags %}
+      <a href="/blog/tagged/{{nit.tag.tag|escape}}"
+        class="post-tag" 
+        rel="tag">{{nit.tag.tag}}</a>  
+    {% endfor %}
+  </p>
+{% endif %}
+
+
+<a href='Javascript:toggleAddComment({{news_item.id}});' class="comments-link">Add a new comment</a>
+{% if news_item.sorted_comments|length > 0 %}
+| <a href='Javascript:toggleComments({{news_item.id}});' class="comments-link">{{ news_item.sorted_comments|length }} comment(s)</a>
+{% endif %}
+
+<div id="AddComment-{{news_item.id}}" class="comments" style="display:none;">
+{% include 'custom_comment_form.html' %}
+</div>
+{% if news_item.sorted_comments|length > 0 %}
+<p>
+
+  <div id="Comments-{{news_item.id}}" class="comments" width="50%">
+  <table>
+  {% for comment in news_item.sorted_comments %}
+    <tr class="comment">
+      <td class="comment-text">
+        <p>
+          {% show_gravatar comment.email 80 %}
+          <a rel="external nofollow" href="{{ comment.homepage}}">{{comment.name}}</a> on 
+          <small class="comment-date">{{comment.posted_date|date:"l, F d, Y (h:m:s)"}}</small> says:<br/>
+          {{comment.body|linebreaks}}
+        </p>
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+  </div>
+
+</p>
+{% endif %}
+
+</p>
+
+<br><br> <br><br>
+
+     </div>
+     </div>
+
+{% endfor %}
+
+{% if prev_url %}
+  <a href='{{prev_url}}'><span class='navigation_button'>Prev page</span></a>
+{% endif %}
+
+{% if next_url %}
+  <a href='{{next_url}}'><span class='navigation_button'>Next page</span></a>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_div %}
+<div id="sidebar2"> 
+
+  <!--<img  src='/static/img/twitter-page.png'>-->
+  <span style='display:block;margin-left:10px;margin-right:auto;margin-top:15px;'><a href="https://twitter.com/brianbondy" class="twitter-follow-button" data-show-count="false">Follow @brianbondy</a></span>
+<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
+
+
+<ul>
+  <li><a href="/blog/posted/recent" title="" class="current">Recently posted</a></li>
+  <li><a href="/blog/modified/recent" title="" class="current">Recently modified</a></li>
+
+{% for archive_entry in archive_list %}
+  <li><a href="/blog/posted/{{archive_entry|lower|slugify }}" title="" class="current">{{archive_entry}}</a></li>
+{% endfor %}
+
+</ul> 
+
+<div id="tag-label-container">
+<a href="Javascript:toggleTags();"><span id="tag-label">Tags &gt;&gt;</a>
+
+</div>
+
+<div id="sidebar3" style="display:none;">
+
+<ul>
+{% for tag in tag_list %}
+{% if tag.1 %}
+<li>
+
+<a href="/blog/tagged/{{tag.0|escape}}" 
+   class="post-tag" 
+   rel="tag">{{tag.0}}</a> 
+<a href="/blog/tagged/{{tag.0|escape}}">x {{tag.1}}</a>
+</li>
+{% endif %}
+{% endfor %}
+</ul>
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+

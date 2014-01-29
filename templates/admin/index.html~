@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load markup %}
+{% load mytags %}
+
+{% block title %} Administer brianbondy.com {% endblock %}
+{% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
+{% block subtitle %} I hope you are Brian R. Bondy! {% endblock %}
+{% block body_id %}body_blog{% endblock %}
+
+{% block main_content %}
+
+<ul>
+<li><a href='/admin/news_items/'>NewsItem</a></li>
+<li><a href='/admin/tags/'>Tags</a></li>
+<li><a href='/admin/news_item_comments/'>NewsItemComments</a></li>
+<li><a href='/admin/news_item_tags/'>NewsItemTags</a></li>
+</ul>
+
+{% endblock %}

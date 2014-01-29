@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Compression{% endblock %}
+{% block pagetitle %}Brian R. Bondy - Compression{% endblock %}
+{% block subtitle %}Information Entropy{% endblock %}
+{% block body_id %}body_compression{% endblock %}
+
+{% block extra_div %}
+<div id="sidebar2">
+  <ul>
+     <li><a href="/compression/" title="" class="current">Main</a></li>
+     <li><a href="/compression/huffman/" title="" class="current">Huffman</a></li>
+     <li><a href="/compression/BWT/" title="" class="current">Burrows-Wheeler</a></li>
+     <li><a href="/compression/PPM/" title="" class="current">PPM</a></li>
+  </ul> 
+</div>
+{% endblock %}
+  
+{% block main_content %}
+<h2>Lossless data compression</h2>
+<div class='bold-divider'></div>
+<p>The focus of this section will be on lossless data compression, which is my interest. 
+</p>
+<p>
+Lossless data compression allows the exact reconstruction of data from its compressed source. 
+
+Lossless data compression is used in many areas such as zip and gzip arbitrary data. 
+
+<h2>Lossy data compression</h2>
+<div class='bold-divider'></div>
+<p>
+Lossy data compression typically performs better than lossless data compression; however, it does not reconstruct an exact representation of the data.  Some places where lossy data compression is useful is in images, video, and music.
+
+{% endblock %}

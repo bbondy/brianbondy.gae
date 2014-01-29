@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block pagetitle %}Brian R. Bondy - About{% endblock %}
+{% block title %}Button Stats {% endblock %}
+{% block subtitle %}And the totals are...{% endblock %}
+{% block body_id %}body_button_stats{% endblock %}
+
+{% block main_content %}
+<h2>Results</h2>
+<div class='bold-divider'></div>
+<p>
+The button stats are:
+</p>
+
+<table border="1" cellspacing="2" cellpadding="2">
+<tr>
+<th>RC value</th> <th>Blue views</th> <th>Blue clicks</th> <th>Red views</th> <th>Red clicks</th> <th>RC CTR</th> <th>Blue CTR</th> <th>Red CTR</th>
+</tr>
+{% for button_result in button_result_list %}
+<tr>
+<td><a href="/button/?rc={{button_result.rc_value}}">{{button_result.rc_value}}</a></td> <td>{{button_result.num_blue_impressions}}</td> <td>{{button_result.num_blue_clicks}}</td> <td>{{button_result.num_red_impressions}}</td> <td>{{button_result.num_red_clicks}}</td>
+<td>{{button_result.rc_ctr}}</td> <td>{{button_result.blue_ctr}}</td> <td>{{button_result.red_ctr}}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+{% endblock %}
+

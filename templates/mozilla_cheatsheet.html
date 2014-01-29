@@ -1,0 +1,746 @@
+{% extends "mozilla.html" %}
+{% block title %} Mozilla Platform Development Cheat Sheet{% endblock %}
+{% block pagetitle %}Brian R. Bondy - Mozilla Platform Development Cheat Sheet{% endblock %}
+{% block subtitle %} Firefox, XUL, XBL, XPCOM, Javascript, CSS, ...{% endblock %}
+{% block body_id %}body_mozilla{% endblock %}
+
+{% block main_content %}
+
+<h2>Repositories</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>mozilla-central (Latest for Firefox):<br> 
+<a href='http://hg.mozilla.org/mozilla-central/'>http://hg.mozilla.org/mozilla-central/</a>
+</li>
+
+<li>Mozilla Aurora:<br>
+<a href='http://hg.mozilla.org/releases/mozilla-aurora/'>http://hg.mozilla.org/releases/mozilla-aurora/</a>
+</li>
+
+<li>Mozilla Beta:<br>
+<a href='http://hg.mozilla.org/releases/mozilla-beta/'>http://hg.mozilla.org/releases/mozilla-beta/</a>
+</li>
+
+<li>Mozilla Release:<br>
+<a href='http://hg.mozilla.org/releases/mozilla-release/'>http://hg.mozilla.org/releases/mozilla-release/</a>
+</li>
+
+<li>comm-central (Latest for Thunderbird, SeaMonkey, Lightning/Sunbird):<br>
+<a href='http://hg.mozilla.org/comm-central/'>http://hg.mozilla.org/comm-central/</a>
+</li>
+
+<li>Mozilla Inbound (Push changes here to get them on mozilla-central):<br>
+<a href='http://hg.mozilla.org/integration/mozilla-inbound/'>http://hg.mozilla.org/integration/mozilla-inbound</a>
+</li>
+
+<li>Mozilla ESR 10:<br>
+<a href='http://hg.mozilla.org/releases/mozilla-esr10'>http://hg.mozilla.org/releases/mozilla-esr10</a>
+</li>
+
+</ul>
+
+<h2>Extensions</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li><a href='http://getfirebug.com/releases/firebug/1.7/firebug-1.7.1.xpi'>Firebug</a><br>
+    Edit, debug, and monitor JavaScript, CSS, HTML, and external XUL
+  </li>
+  <li><a href='http://getfirebug.com/releases/chromebug/chromebug-1.7.1.xpi'>Chromebug</a> (Requires a matching Firebug version)<br>
+    Debug Firefox itself's XUL, XBL, Javascript, ... (debug chrome)
+  </li>
+  <li><a href='https://addons.mozilla.org/en-US/firefox/addon/extension-developer/'>Extension Developer</a><br>
+    Interactive JavaScript shell, live preview HTML and XUL editors, regular expression and XPath testers, and packaging tool 
+  </li>
+</ul>
+
+<h2>Plugins</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Copy to: &lt;installDir&gt;\Plugins</li>
+  <li>Environment variable MOZ_DEBUG_CHILD_PROCESS=1 can be used to delay 30 seconds when loading plugin-container before the plugin is loaded.</li>
+  <li><a href='https://developer.mozilla.org/En/Plugins:_The_first_install_problem'>Plugin development</a></li>
+</ul>
+
+<h2>Debugging</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Use Firebug and Chromebug to debug XUL, XBL, JavaScript</li>
+<li>Debug C++ src in Windows: Open VS2010, select open project, select dist/bin/firefox.exe in your obj dir.   Press F5.  Change source, do an incremental build, open the source and set breakpoints in VS2010.</li>
+<li>To avoid having debug assertions and to have them show up in the log instead, set this environment variable:<br>XPCOM_DEBUG_BREAK=warn</li>
+</ul>
+
+<h2>Debugging XUL apps</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Preferences should be in a .js file in the directory %appname%/defaults/preferences/.</li>
+  <li>/* debugging prefs */<br>
+  pref("browser.dom.window.dump.enabled", true);<br>
+  pref("javascript.options.showInConsole", true);<br>
+  pref("javascript.options.strict", true);<br>
+  pref("nglayout.debug.disable_xul_cache", true);<br>
+  pref("nglayout.debug.disable_xul_fastload", true);
+  </li>
+  <li>To write to the Error Console:<br>
+Components.utils.reportError("0");
+  </li>
+  <li>To write to the console:<br>
+  dump("hello world!");
+  </li>
+</ul>
+
+<h2>Command Line</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>-purgecaches use when changing XUL, XBL, JSM, ...</li>
+  <li>-no-remote allows you to run multiple instances of the program with different profiles</li>
+  <li>-console starts the application with a debug console</li>
+  <li>-ProfileManager starts the application with the profile manager</li>
+  <li>-P "profilename" starts the application with the specified profile</li>
+  <li>-console starts firefox with an extra console, you can then enable extra logs like app.update.log in about:config</li>
+  <li><a href='https://developer.mozilla.org/En/Command_Line_Options'>Other command line options</a></li>
+</ul>
+
+<h2>Crashes</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>about:crashes gives you links to your crashes</li>
+  <li><a href='https://crash-stats.mozilla.com/products/Firefox'>Online crash reports and stats</a></li>
+</ul>
+
+<h2>Getting help</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>IRC:<br>
+irc.mozilla.org<br>
+Some channels: #developers, #introduction, #xul, #planning, #jsapi, #gfx<br>
+<a href='https://wiki.mozilla.org/IRC'>More info on IRC</a>
+</li>
+
+<li><a href='nntp://news.mozilla.org'>NNTP Server</a></a>
+<li><a href='https://groups.google.com/forum/?pli=1#!forum/mozilla.dev.identity'>Google group</a></li>
+<li><a href='https://lists.mozilla.org/listinfo/dev-identity'>Mailing list</a></li>
+
+</ul>
+
+<h2>Useful links when getting started</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='http://www.gerv.net/hacking/before-you-mail-gerv.html'>Ability to edit bugs on bugzilla</a> (editbugs privs)</li> 
+<li><a href='http://www.mozilla.org/hacking/committer/'>Getting commit access</a></li>
+
+<li><a href='https://developer.mozilla.org/en/Mozilla_Source_Code_Directory_Structure'>Mozilla source code directory structure</a>
+</ul>
+
+<h2>Useful links forever</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='https://bugzilla.mozilla.org/'>Bugzilla</a></li>
+<li><a href='http://hg.mozilla.org/mozilla-central/pushloghtml'>Mozilla central push log</a></li> 
+<li><a href='http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/'>Mozilla central Nightly builds</a></li>
+<li><a href='http://mxr.mozilla.org/'>MXR (Browse source code online)</a></li>
+<li><a href='http://dxr.mozilla.org/'>DXR (Search source code online)</a></li>
+<li><a href='https://developer.mozilla.org/en/Tinderbox'>Tinderbox (Tool to ensure compiles on various platforms and all automated)</a>
+<li><a href='https://wiki.mozilla.org/Modules'>Modules and module owners (for code reviews and questions)</a></li>
+<li><a href='https://crash-stats.mozilla.com/products/Firefox'>Top crash reports</a></li>
+<li><a href='http://www.mozilla.org/MPL/boilerplate-1.1/'>License Boilerplate</a></li>
+<li><a href='http://brasstacks.mozilla.com/toolbox/'>Tools</a></a>
+<li><a href='http://air.mozilla.org/'>Air Mozilla</a></a>
+<li><a href='http://air.mozilla.org/old-air-mozilla/'>Old Air Mozilla</a>
+</ul>
+
+<h2>Useful links if you are an employee</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li><a href='https://intranet.mozilla.org/'>Intranet</a></li>
+  <li><a href='https://intranet.mozilla.org/pto/'>Submitting PTO</a></li>
+  <li><a href='https://phonebook.mozilla.org'>Internal phonebook</a></li>
+  <li><a href='https://www.hrpassport.com/'>TriNet</a></li>
+</ul>
+
+<h2>Coding style</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>line length: 80 chars or less</li>
+<li>indenting: 2 spaces (no tabs)</li>
+<li>Function definitions, braces on newlines</li>
+<li>Conditionals and loops:<br>
+if (condition) {<br>
+}</li>
+<li>Multiline, align with parentheses:<br>
+if (argument1 == paramvalu1 &amp;&amp; argument2 == paramvalue2 &amp;&amp; <br>
+&nbsp;&nbsp;&nbsp; argument3 == paramvalue3 &amp;&amp; argument4 == paramValue4) {<br>
+}</li>
+<li>Comments, use space after comment indicator</li>
+<li><a href='https://developer.mozilla.org/En/Mozilla_Coding_Style_Guide'>More info on coding style</a></li>
+</ul>
+
+<h2>Build commands</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>
+Full build of Firefox: (~ 1h) <br>
+make -f client.mk
+</li>
+
+<li>To rebuild Firefox without pulling the tree: (~25min)<br>
+make -f client.mk build_all_depend
+</li>
+
+<li>To clean: (~2min) <br>
+make -f client.mk distclean
+</li>
+
+<li>Incremental builds (~2min, see below section)
+</li>
+
+<li>Full build of Thunderbird or other comm-central<br>
+python client.py checkout (which clones a copy of mozilla-central inside a subfolder called mozilla)<br>
+make -f client.mk
+</li>
+
+<li>Make an objdir for partial tree<br>
+cd $(objdir)<br>
+../build/autoconf/make-makefile component/path<br>
+cd $(objdir)/component/path<br>
+make
+
+</li>
+<li>Regenerating a Makefile from a Makefile.in<br>
+cd $(objdir)<br>
+../build/autoconf/make-makefile dir_path/with/makefile_dot_in
+</li>
+
+<li>pymake config:<br>
+notepad c:\users\bbondy\.profile<br>
+alias pymake=/c/project/mozilla/mozilla-central/build/pymake/make.py
+</li>
+
+<li>Building with pymake:<br>
+mkdir objdirpymake<br>
+cd objdirpymake<br>
+../configure (if fails, run again)<br>
+pymake -sj4 (4 is the number of cores)</li>
+
+<li>Or building with pymake:<br>
+python build/pymake/make.py -f client.mk</li>
+
+<li>Running tests with pymake:<br>
+python -OO ../build/pymake/make.py mochitest-plain</li>
+
+<li>Incremental builds with pymake:<br>
+pymake -sC widget/windows</li>
+</ul>
+
+<h2>Example .mozconfig files  (Gecko 2.0 and up)</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>
+Firefox Debug .mozconfig contents: (Using mozilla-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-ff-debug<br>
+ac_add_options --enable-application=browser<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+ac_add_options --enable-tests<br>
+</li>
+<li>
+Firefox Release .mozconfig contents: (Using mozilla-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-ff-debug<br>
+ac_add_options --enable-application=browser<br>
+ac_add_options --enable-optimize<br>
+ac_add_options --enable-debug-symbols<br> 
+</li>
+<li>
+xulrunner .mozconfig contents: (Using mozilla-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-xulrunner-debug<br>
+ac_add_options --enable-application=xulrunner<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+</li>
+<li>
+Thunderbird .mozconfig contents: (Using comm-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-tb-debug<br>
+ac_add_options --enable-application=mail<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+#If you also want Lightning<br>
+ac_add_options --enable-calendar<br>
+</li>
+<li>
+SeaMonkey .mozconfig contents: (Using comm-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-seamonkey-debug<br>
+ac_add_options --enable-application=suite<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+</li>
+<li>
+Sunbird .mozconfig contents: (Using comm-central)<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-sunbird-debug<br>
+ac_add_options --enable-application=calendar<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+</li>
+<li>
+Fennec Win32 .mozconfig<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir<br>
+ac_add_options --enable-application=mobile<br>
+# For improved compile speeds, all optional.<br>
+mk_add_options MOZ_MAKE_FLAGS=-j4<br>
+#export CCACHE_HARDLINK=1<br>
+#export MOZ_DEBUG_SYMBOLS=1<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+# Needed on Win32 to fix problem with Windows Vista SDK<br>
+ac_add_options --disable-accessibility<br>
+</li>
+
+
+<li>
+Windows 8 Metro .mozconfig<br>
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir<br>
+ac_add_options --enable-application=mobile<br>
+mk_add_options MOZ_MAKE_FLAGS=-j4<br>
+ac_add_options --enable-debug<br>
+ac_add_options --disable-optimize<br>
+ac_add_options --enable-tests<br>
+ac_add_options --enable-win8metro<br>
+ac_add_options --with-windows-version=602<br>
+</li>
+
+</ul>
+
+<h2>Incremental builds</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Don't use make in subdirectories from within the source dirs, use the obj dir which is created when you first build (Example: obj-i686-pc-mingw32\widget)</li>
+<li>Example if you have changes to /widget:<br>
+cd obj-i686-pc-mingw32<br>
+make -C widget<br>
+make -C toolkit/library<br>
+</li>
+</ul>
+
+<h2>Logging</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>
+Logging Javascript with Firebug/Chromebug/web console:<br>
+console.log("my output");<br>
+console.log("%s is %d years old.", "Bob", 42).<br>
+</li>
+<li>
+Netscape portable runtime logging (<a href='http://www.mozilla.org/projects/nspr/reference/html/prlog.html'>PR_LOG</a>):<br>
+Environment variables:<br>
+NSPR_LOG_FILE = WinDebug and it will output to the debug output window or use NSPR_LOG_FILE=C:\nspr-log.txt to output to a file by that name<br>
+NSPR_LOG_MODULES  can specify which modules to log with the, example NSPR_LOG_MODULES = nsWindowsWidgets:5 (5 is the log level) 
+You can use NSPR_LOG_MODULES=all:5 to enable all module logging<br>
+</li> 
+</ul>
+
+<h2>Finding source of regressions</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Do a binary search on the nightly builds until you narrow down a build that introduced the regression</li>
+<li>Use the push log to review changes in that time span</li>
+<li>Use <a href='http://mozilla.github.com/mozregression/'>MozRegression</a>
+</ul>
+
+<h2>Submitting a patch for review</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>You don't have commit access at first, instead create a patch.</li>
+<li>Setup your author information (your ~/.hgrc or ~/mercurial.ini on Windows):<br>
+[ui]<br>
+username = Your Name &lt;your@email.com&gt;<br>
+</li>
+<li>Use the mq extension, add to your ~/.hgrc or ~/mercurial.ini on Windows</li>
+[extensions]<br>
+hgext.mq =<br>
+</li>
+<li><a href='http://blog.bonardo.net/2010/06/22/so-youre-about-to-use-checkin-needed'>When submitting do this</a></li> 
+</ul>
+
+<h2>Working with hg and patches</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>To create a patch:<br>
+hg qnew bugXXXXXX.patch<br><br>
+On popup:
+Bug XXXXXX - Description of your fix
+</li>
+<li>To take a file out of a patch:<br>
+hg qrefresh -X re:regexp_pattern_of_files_to_remove
+</li>
+<li>To refresh changes into your patch:<br>
+hg qrefresh
+</li>
+<li>To see the status of changes: (after you take out files it should re-appear in the changes)<br>
+hg status
+</li>
+<li>Undo application of a patch in your MQ patch queue: (Removes the patch from your commit tree and working directory)<br>
+hg qpop (To unapply the last applied patch)<br>
+hg qpop -a (To unapply all patches)<br>
+hg qpop name.patch (To unapply all patches up to but not including the specified patch)
+</li>
+
+<li>Apply a patch which is in your MQ patch queue: (Re-adds the patch to your commit tree and working directory, you can apply more than one patch)<br>
+hg qpush (To apply the next patch in the series)<br>
+hg qpush -a (To apply all patches)<br>
+hg qpush name.patch (To apply all patches in the series up to and including the named patch)
+</li>
+
+<li>List which patches are in your MQ patch queue:<br>
+hg qseries
+</li>
+
+<li>List which patches in your MQ patch queue are applied (pushed):<br>
+hg qapplied
+</li>
+
+<li>List which patches in your MQ patch queue are not yet applied (pushed):<br>
+qunapplied
+</li>
+
+<li>To delete a patch from your MQ patch queue: (Patch must first be unapplied)<br>
+hg qdelete
+</li>
+
+<li>To turn a patch into a permanent changeset: (Patch must first be applied)<br>
+hg qfinish
+</li>
+
+<li>To turn a normal changeset into a patch: (Patch must first be unapplied)<br>
+hg qimport -r tip
+</li>
+
+<li>Convert a patch to a finalized changeset: (Patch must first be applied)<br>
+hg qfinish tip<br>
+hg qfinish -a (for all of the patches<br>
+</li>
+
+<li>To make a backup of your patches directory: (Saves the patches backup to .hg/patches.N)<br>
+hg qsave
+</li>
+
+<li>To import someone else's patch into your MQ patch queue:<br>
+hg qimport patchname.patch (You must later also apply it with qpush)
+</li>
+
+<li>To import someone else' patch with a different patch strip count:<br>
+patch -pN (to apply the patch, where N is the strip count of the patch)<br>
+qnew (to create a new patch)<br>
+hg addremove (to pickup any files added/removed by the patch)<br>
+qrefresh (to refresh the patch)
+</li>
+
+<li>To change the ordering of how patches are applied<br>
+Manually edit your .hg/patches/series file, one patch name per line.
+</li>
+
+<li>To rollup several patches into one<br>
+hg diff -r qparent &gt; rollup.patch
+</li>
+
+<li>See last 50 pushed<br>
+hg log -l 50</li>
+
+<li>Undoing a qfinish or remove last commit into a patch<br>
+hg qimport -r tip (Make sure you have no other patches applied)</li>
+
+<li>To backout a revision<br>
+hg backout revnumber</li>
+
+<li>Folding a patch in your queue onto another one<br>
+hg qgoto base_patch.patch<br>
+hg qfold patch_to_fold_in_base_patch.patch</li>
+
+<li>Renaming a patch<br>
+hg qrename new_patch_name.patch
+</li>
+<li>Merge all changes from parent repo into your branch<br>
+cd yourbranchdir<br>
+hg update<br>
+hg pull other-repo<br>
+hg merge<br>
+hg commit<br>
+hg push
+</li>
+<li>Clone a repository up until a specific changeset<br>
+hg clone -r revisionid http://hg.mozilla.org/mozilla-central/ repo_name
+</li>
+<li>Remove a changeset and all of its decendants<br>
+hg strip changesetid
+</li>
+<li>Rebase one repository to another by beheading the old tip<br>
+cd repo_you_want_to_change<br>
+hg pull repo_to_change_to<br>
+hg heads .<br>
+hg update -r revisin_to_forget_about<br>
+hg commit --close-branch<br>
+hg update -r revision_to_use<br>
+hg push --force
+</li>
+</ul>
+
+<h2>Documentation</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='https://developer.mozilla.org/Project:en/How_to_Help'>How to help with documentation</a></li>
+</ul>
+
+
+<h2>Testing and QA</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Automated testing <a href='https://developer.mozilla.org/en/Developing_Tests'>link1</a> <a href='https://developer.mozilla.org/en/Mozilla_automated_testing'>link2</a></li>
+<li><a href=https://litmus.mozilla.org/'>Litmus (Manual testing)</a>
+
+<li><a href='https://developer.mozilla.org/en/Mochitest'>Mochitest</a> for testing via pages (HTML, XHTML, SVG, XUL, XBL)  (mochitest-plain, mochitest-chrome, mochitest-browser-chrome, mochitest-a11y or mochitest-ipc)</li>
+<li><a href='https://developer.mozilla.org/en/Browser_chrome_tests'>Browser chrome mochitest</a> for testing via JS</li>
+<li><a href='https://developer.mozilla.org/en/Creating_reftest-based_unit_tests'>Reftests</a> for testing if 2 pages that should render the same actually do</li>
+<li>Compiled code tests</li>
+<li><a href='https://developer.mozilla.org/en/Writing_xpcshell-based_unit_tests'>xpcshell</a> for testing XPCOM components</li>
+</ul>
+
+<h2>Automated test run examples</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>mochitest-plain:<br>
+  TEST_PATH=content/html/content/test make -C $(OBJDIR) mochitest-plain
+  </li>
+  <li>mochitest-chrome: (like a mochitest but with chrome privs)<br>
+  TEST_PATH=widget/tests/ make -C $(OBJDIR) mochitest-chrome
+  </li>
+  <li>mochitest-browser-chrome: (Chrome JS tests)<br>
+  TEST_PATH=widget/tests/ make -C $(OBJDIR) mochitest-browser-chrome
+  </li>
+  <li>xpcshell test, whole directory:<br>
+  cd $(OBJDIR)<br>
+  make -C widget/tests/ xpcshell-tests<br>
+  </li>
+  <li>xpcshell single test:<br>
+  cd $(OBJDIR)<br>
+  make SOLO_FILE="testname.js" -C widget/tests/ check-one<br>
+  </li>
+  <li>reftests:<br>
+  TEST_PATH=image/test/reftest/reftest.list make -C obj-i686-pc-mingw32 reftest
+  </li>
+</ul>
+
+<h2>Troubleshooting build problems</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>I built on windows, and had crashes on startup:<br>
+The reason ended up being because I was using the same profile as my FF4 and some extensions were causing the crash (Firebug in particular).
+Simply disabling the extensions fixed the problem.
+</li>
+<li>If you are building on Windows with VC2010, and get the error, install the <a href='http://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en'>Win7.0 SDK</a> instead.
+Alternatively if you really want to use 7.1 you may need to <a href='https://bugzilla.mozilla.org/show_bug.cgi?id=631910'>patch your guess-msvc.bat</a>
+</ul>
+
+<h2>about:</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Blank page:<br>
+      about:blank
+  </li>
+  <li>Addons:<br>
+      about:addons
+  </li>
+  <li>To adjust settings:<br>
+      about:config
+  </li>
+  <li>To see how your Firefox was built:<br>
+      about:buildconfig
+  </li>
+  <li>To see all of your crash reports:<br>
+      about:crashes
+  </li>
+  <li><a href='http://en.wikipedia.org/wiki/About_URI_scheme#Mozilla-specific_about:_addresses'>Other</a></li>
+</ul>
+
+<h2>Common about:config prefs</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Allow remote XUL from local computer:<br>
+dom.allow_XUL_XBL_for_file: true;
+</li>
+</ul>
+
+<h2>XPCOM objects in JavaScript</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Creating an XPCOM component:<br>
+    var cid = "@brianbondy.com/componentname;1"<br>
+    var obj = Components.classes[cid].createInstance();<br>
+    obj = obj.QueryInterface(Components.interfaces.IMyInterface)
+  </li>
+  <li>Listing XPCOM components:<br>
+    for (var c in Components.classes) { print(c); }
+  </li>
+  <li>Listing XPCOM interfaces:<br>
+    for (var i in Components.interfaces) { print(i); }
+  </li>
+</ul>
+
+<h2>How to push to try</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Need commit access level 1</li>
+<li><a href='https://wiki.mozilla.org/ReleaseEngineering/TryServer'>Try server info</a></li>
+<li><a href='http://trychooser.pub.build.mozilla.org/'>TryChooser - try command line generator</a></li>
+  <li><a href='https://tbpl.mozilla.org/'>Build bot results</a></li>
+  <li>In .hgrc (or mercurial.ini) add:<br>
+  [paths]<br>
+  try = ssh://hg.mozilla.org/try<br>
+  </li>
+  <li>To push the applied hg queue patches to the try server:<br>
+  hg qrefresh --message "try: -b do -p all -u all -t all"<br>
+  hg push -f try<br>
+  </li>
+</ul>
+
+<h2>How to push a changeset from your MQ</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>If you want your patch to land on Aurora, or Firefox Beta you need to request it in Bugzilla.  only for severe security, stability, or regressions recently introduced.  Provide risk/reward in ticket.</li>
+  <li>Need commit access level 3</li>
+  <li>In .hgrc (or mercurial.ini) add:<br>
+  [paths]<br>
+  mozilla-inbound = http://hg.mozilla.org/integration/mozilla-inbound/<br>
+  </li>
+  <li>To push:<br>
+  Move your patch to the top of your queue<br>
+  hg pull<br>
+  hg update<br>
+  hg qpush<br>
+  hg qrefresh -m "Bug xxx - Blah. Blah. Blah. r=xyz"<br>
+  hg qfinish -a<br>
+  hg push mozilla-inbound<br>
+  </li>
+  <li><a href='https://wiki.mozilla.org/Tree_Rules/Inbound#Please_do_the_following_after_pushing_to_inbound'>Rules for pushing</a></li>
+</ul>
+
+
+
+<h2>Bugzilla keywords</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>addon-compat: If your change may affect addon compatibility</li>
+  <li>dev-doc-needed: If your change may need documentation</li>
+  <li>regression: If your bug is a regression</li>
+  <li>checkin-needed: If a checkin is needed for a patch but the author can't do it themselves because of privs or some other reason</li>
+  <li><a href='https://bugzilla.mozilla.org/describekeywords.cgi'>Others</a></li>
+</ul>
+
+<h2>Firefox UI debugging</h2>
+<div class='bold-divider'></div>
+<ul>
+<li>Extesion Developer Extension</li>
+<li>Or in any build of Firefox:<br>
+<ul><li>Type about:</li>
+<li>Open the web console</li>
+<li>Type in the following:</li>
+<li>Components.utils.import('resource://gre/modules/Services.jsm');</li>
+<li>this.__proto__ = Services.wm.getMostRecentWindow('navigator:browser');</li>
+<li>Now you can use anything you can in the extensions developer extension</li>
+</li>
+</ul>
+</ul>
+
+<h2>Contributor info and Metrics</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='https://metrics.mozilla.com/data'>Contributor Map / Contribution Trends</a></li>
+<li><a href='#' title='Phonebook not yet available'>Phonebook</a></li>
+</ul>
+
+<h2>Doing Code Reviews</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='https://wiki.mozilla.org/User:GavinSharp/Code_Review'>Code Review Guide</a></li>
+<li>Quick Points:<br>
+<ul>
+  <li>MultiByte vs. Wide character set comm-central defaults to ASCII</li>
+  <li>Check if platform API available pre Win2k</li>
+  <li>Does it pass try?</li>
+  <li>Formatting?</li>
+  <li>Comments, typos, spelling</li>
+  <li>Did you test in scenario X?</li>
+  <li>New import libs in toolkit/library?</li>
+  <li>Should it have tests?</li>
+  <li>Interface change? Change IID, sr required, addon-compat keyword</li>
+  <li>Documentation needed?</li>
+  <li>Mark keywords for post-fix work: dev-doc-needed, privacy-review-needed, sec-review-needed, user-doc-needed, addon-compat, release tracking flags, in-testsuite flag</li>
+</ul>
+</ul>
+
+<h2>Commit flags</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Append to the end of patches:</li>
+  
+  <ul>
+  <li>reviewed by: r=nickname</li>
+  <li>approved by: a=nickname</li>
+  <li>super reviewed by: sr=nickname</li>
+  </ul>
+</ul>
+
+<h2>Mentoring bugs</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Add to whiteboard [mentor=bbondy]</li>
+  <li><a href='https://wiki.mozilla.org/Mentors'>More info</a></li>
+</ul>
+
+<h2>Release cycle</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>Every 6 weeks:
+  <ul> <li>Nightly -&gt; Aurora</li>
+    <li>Aurora -&gt; Beta</li>
+    <li>Beta -&gt; Release</li>
+  </ul>
+  <li><a href='https://wiki.mozilla.org/RapidRelease/Calendar'>Release calendar</a></li>
+</ul>
+
+<h2>Personal files on people.mozilla.com</h2>
+<div class='bold-divider'></div>
+<ul>
+
+<li>Add to your C:\Users\bbondy\.ssh\config file:<br>
+Host people.mozilla.com<br>
+&nbsp;&nbsp;User bbondy<br>
+&nbsp;&nbsp;IdentityFile C:\Users\bbondy\.ssh\bbondy.pub<br>
+  </li>
+
+  <li>Your must already have L1 commit access, i.e. your public key is already on the server.</li>
+
+  <li>You can upload files to a URL like: http://people.mozilla.com/~bbondy<br>
+Anything under the /home/bbondy/public_html will show up at the http address above.
+  </li>
+
+  <li>On Windows connect with putty sftp:<br>
+  psftp bbondy@people.mozilla.com<br>
+  Enter your private key password<br>
+  put filename.ext<br>
+  </li>
+</ul>
+ 
+<h2>Project Branches</h2>
+<div class='bold-divider'></div>
+<ul>
+  <li>TBPL results: https://tbpl.mozilla.org/?tree=BRANCHNAME</li>
+  <li>Self serve build API to create dep, Nightly, or PGO builds: https://build.mozilla.org/buildapi/self-serve/BRANCHNAME</li>
+</ul>
+
+<h2>Themes</h2>
+<div class='bold-divider'></div>
+<ul>
+<li><a href='https://developer.mozilla.org/en/Themes'>More info on themes</a></li>
+</ul>
+
+
+
+{% endblock %}
+  

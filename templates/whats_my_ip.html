@@ -1,0 +1,23 @@
+{% extends "other.html" %}
+{% block title %} Other - What's My IP?{% endblock %}
+{% block pagetitle %}Brian R. Bondy - What's my IP?{% endblock %}
+{% block subtitle %}Other than 127.0.0.1{% endblock %}
+
+{% block main_content %}
+<h2>What's your external IP?</h2>
+<div class='bold-divider'></div>
+<p>
+Your external IP is {{client_IP}}
+</p>
+
+<p>
+Unless you have paid specifically for a static IP address, then your IP address can and probably will change quite often. 
+</p>
+
+<p>
+It is hard for a computer to determine its own external IP address.  For this reason I have provided this page to help you determine your external IP address.  That is because the external IP address does not belong to the computer itself but it belongs to a network device called a NAT or router which your requests end up coming from.
+</p>
+
+</p>
+
+{% endblock %}

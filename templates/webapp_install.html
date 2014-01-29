@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<script>
+  function installWebapp() {
+    var request = navigator.mozApps.install("http://www.brianbondy.com/static/webapps/brianbondy.webapp");  
+    request.onsuccess = function() {  
+      alert('installed');
+    }  
+    request.onerror = function() {  
+      alert('not installed');
+    }  
+  }
+  function installWebapp2() {
+    var request = navigator.mozApps.install("http://www.brianbondy.com/static/webapps/brianbondy2.webapp");  
+    request.onsuccess = function() {  
+      alert('installed');
+    }  
+    request.onerror = function() {  
+      alert('not installed');
+    }  
+  }
+</script>
+</head>
+<body>
+  <a href='javascript:installWebapp();'>Install Webapp</a><br>
+  <a href='javascript:installWebapp2();'>Install Webapp2</a><br>
+</body>
+</html>

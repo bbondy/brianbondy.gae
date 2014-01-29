@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Thank you for your comment {% endblock %}
+{% block pagetitle %}Brian R. Bondy - Comment Posted{% endblock %}
+{% block subtitle %}  {% endblock %}
+{% block body_id %}body_posted_comment{% endblock %}
+
+{% block main_content %}
+
+<a href="/blog/id/{{ comment.object_pk }}/">Return to the original post</a>
+
+{% endblock %}

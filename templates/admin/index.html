@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load markup %}
+{% load mytags %}
+
+{% block title %} Administer brianbondy.com {% endblock %}
+{% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
+{% block subtitle %} I hope you are Brian R. Bondy! {% endblock %}
+{% block body_id %}body_blog{% endblock %}
+
+{% block main_content %}
+
+<h1>Models</h1>
+<p>
+<ul>
+<li><a href='/admin/news_items/'>NewsItem</a></li>
+<li><a href='/admin/tags/'>Tags</a></li>
+<li><a href='/admin/news_item_comments/'>NewsItemComments</a></li>
+</ul>
+</p>
+
+<h1>Memcache statistics</h1>
+
+<p>
+<ul>
+{% for stat in stats.iteritems %}
+
+  <li>{{ stat.0 }}: {{ stat.1 }}</li>
+{% endfor %}
+</ul>
+</p>
+
+<p>
+<a href='/admin/clear_memcache/'>Clear memcache!</a>
+</p>
+
+{% endblock %}

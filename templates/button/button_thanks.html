@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block pagetitle %}Brian R. Bondy - About{% endblock %}
+{% block title %}Thanks! {% endblock %}
+{% block subtitle %}Thank you for contributing...{% endblock %}
+{% block body_id %}body_button_thanks{% endblock %}
+
+{% block main_content %}
+<h2>Results</h2>
+<div class='bold-divider'></div>
+<p>
+Thanks for clicking where the rc value was: {{rc}}, the button color was: {{button_color}}
+</p>
+
+<p>
+<a href="/button/stats/">To view stats click here</a>
+</p>
+
+{% endblock %}
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/rss/" />
+<link rel="alternate" type="application/atom+xml" title="ATOM" href="/feeds/atom/" />
+
+<link href="/static/prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/static/prettify/prettify.js"></script>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/main.js"></script>
+
+<title>Brian R. Bondy</title> 
+<style type="text/css">
+@import url("/static/css/style-min.css");
+</style></head>
+
+<body onload="styleCode()" id="{% block body_id %}default_body_id{% endblock %}" class="thrColFixHdr">
+
+<div id="container">
+
+  {% block extra_div %}
+  {% endblock %}
+   <div id="mainContent">
+    <h1>{% block title %} {% endblock %}</h1>
+    <h2>{% block subtitle %} {% endblock %}</h2><br/>
+
+{% block main_content %}
+  <h2>Post Title</h2>
+  <div class='bold-divider'></div>
+  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. In elementum gravida tellus. Duis ultricies felis sed nulla. Suspendisse tristique quam vel massa. Praesent vitae eros. Vestibulum nec dui. Fusce quis arcu at erat dignissim bibendum. Nullam lacus enim, tempor non, rhoncus non, luctus id, eros. Proin euismod. Sed ornare odio ut turpis. Curabitur consectetuer ante non risus. Nullam eleifend diam vitae tortor. In neque tortor, placerat et, vestibulum nec, aliquet eget, turpis. Morbi venenatis imperdiet risus. Maecenas sed sem. Ut malesuada tristique velit. Nam at arcu a eros facilisis nonummy. Ut ultricies erat et enim. Proin libero.</p>
+{% endblock %}
+
+</div>
+<br class="clearfloat" />
+</div>
+</div>
+
+<div style='float:left;clear:both;' id="footer_container">
+<div id="footer">
+<p>©  Copyright Brian R. Bondy</p>
+<!-- end #footer -->
+</div>
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script><script type="text/javascript">
+_uacct = "UA-575471-1";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

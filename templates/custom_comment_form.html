@@ -1,0 +1,26 @@
+{#{% load comments i18n %}#}
+
+<form action="/blog/comments/id/{{news_item.id}}/" method="POST">
+<p>
+  <label for="id_name">Name:</label>
+  <input type="text" name="name" id="id_name" required />
+</p> 
+
+<p>
+  <label for="id_email">Email:</label>
+  <input type="email" placeholder="email@example.com" name="email" id="id_email" required />
+</p>
+
+<p>
+  <label for="id_homepage">Homepage:</label>
+  <input type="url" name="homepage" id="id_homepage" />
+</p>
+
+<p>
+  <label for="id_body">Comment:</label>
+  <textarea type="text" name="body" id="id_body" required></textarea>
+</p>
+<input type="submit" value="Submit" />
+<p>Comments will be manually verified after automated filtering and will show up within 24h</p>
+
+</form>

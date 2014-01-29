@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="google-site-verification" content="q3ucTZ-sp9vjrvmC4W6sA6-Lb9LGxqs2101RE8wGSic" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/rss/" />
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<title>{% block pagetitle %}Brian R. Bondy{% endblock %}</title> 
+<style type="text/css">
+@import url("/static/css/style7-min.css");
+</style>
+{% block extra_head %}{% endblock %}
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-575471-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+
+<body onload="styleCode()" id="{% block body_id %}default_body_id{% endblock %}">
+
+<div id="container">
+  <div id="header">
+  <a href="http://brianbondy.com/" id="homelogo"></a>
+
+</div>
+</div>
+
+<div id="dolphincontainer">
+  <div id="dolphinnav">
+  <ul id="dolphinnav-ul">
+    <li class="dolphinnav-ul-li"><a href="/" title="" id="dolphinnav_blog"><span>BLOG</span></a></li>
+    <li class="dolphinnav-ul-li"><a href="/projects/" title="" id="dolphinnav_projects"><span>PROJECTS</span></a></li>
+    <li class="dolphinnav-ul-li"><a href="/resume/" title="" id="dolphinnav_resume"><span>RESUME</span></a></li>
+    <li class="dolphinnav-ul-li"><a href="/other/" title="" id="dolphinnav_other"><span>OTHER</span></a></li>
+    <li class="dolphinnav-ul-li"><a href="/about/" title="" id="dolphinnav_about"><span>ABOUT</span></a></li>
+    <li class="dolphinnav-ul-li"><a href="/contact/" title="" id="dolphinnav_contact"><span>CONTACT</span></a></li>
+  </ul>
+  </div>
+</div>
+<div id="container2">
+  <div id="sidebar1">
+    <ul>
+      <li><a href="/" title="" id="sidebar_blog"> Blog</a></li>
+      <li><a href="/compression/" title="" id="sidebar_compression">Compression</a></li>
+      <li><a href="/math/" title="" id="sidebar_math">Mathematics</a></li>
+      <li><a href="/mozilla" title="" id="sidebar_mozilla">Mozilla</a></li>
+      <li><a href="/stackexchange" title="" id="sidebar_stackexchange">Stack Exchange</a></li>
+      <li><a href="/khanacademy" title="" id="sidebar_khanacademy">Khan Academy</a></li>
+      <li><a href="/projects/" title="" id="sidebar_projects">Projects</a></li>
+      <li><a href="/resume/" title="" id="sidebar_resume">Resume</a></li>
+      <li><a href="/about/" title="" id="sidebar_about">About</a></li>
+      <li><a href="/contact/" title="" id="sidebar_contact">Contact</a></li>
+      <li><a href="/other/" title="" id="sidebar_other">Other</a></li>
+
+      <li><br/><strong>My Profiles</strong></li>
+      <li><a href="http://stackoverflow.com/users/3153/brian-r-bondy" title="" id="sidebar_stackoverflow" target="_new" rel="me"><img src='/static/img/externalLinkIcon.png' width="12" height="12" /> StackOverflow</a></li>
+      <li><a href="http://twitter.com/brianbondy" title="" id="sidebar_twitter" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Twitter</a></li>
+      <li><a href="http://www.linkedin.com/in/bbondy" title="" id="sidebar_linkedin" target="_new" rel="me"> <img src="/static/img/externalLinkIcon.png" width="12" height="12" /> LinkedIn</a></li>
+      <li><a href="http://www.khanacademy.org/profile/bbondy/" title="" id="sidebar_khanprofile" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Khan Academy</a></li>
+      <li><a href="https://bugzilla.mozilla.org/buglist.cgi?list_id=3095352;resolution=FIXED;emailtype1=exact;emailassigned_to1=1;query_format=advanced;bug_status=RESOLVED;bug_status=VERIFIED;bug_status=CLOSED;email1=netzen%40gmail.com" title="" id="sidebar_contributions" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Firefox work</a></li>
+
+      <li><br/><strong>Links</strong></li>
+      <li><a target="_new" href="http://www.billthelizard.com/"><img src='/static/img/externalLinkIcon.png' width="12" height="12" /> Bill the Lizard</a></li>        
+      <li><a target="_new" href="http://www.cforcoding.com/"><img src='/static/img/externalLinkIcon.png' width="12" height="12" /> C for Coding</a></li>        
+      <li><a target="_new" href="http://jalf.dk/blog/"><img src='/static/img/externalLinkIcon.png' width="12" height="12" /> jalf Blog</a></li>
+      <li><a target="_new" href="http://slott-softwarearchitect.blogspot.com/"> <img src='/static/img/externalLinkIcon.png' width="12" height="12" /> S.Lott blog</a></li>
+    </ul>
+
+  <!-- end #sidebar1 -->
+  </div>
+
+  {% block extra_div %}
+  {% endblock %}
+
+  {% block extra_div2 %}
+  {% endblock %}
+
+   <div id="mainContent">
+    <h1>{% block title %} {% endblock %}</h1>
+    <h2>{% block subtitle %} {% endblock %}</h2><br/>
+
+{% block main_content %}
+
+          <h2>Post Title</h2>
+          <div class='bold-divider'></div>
+  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. In elementum gravida tellus. Duis ultricies felis sed nulla. Suspendisse tristique quam vel massa. Praesent vitae eros. Vestibulum nec dui. Fusce quis arcu at erat dignissim bibendum. Nullam lacus enim, tempor non, rhoncus non, luctus id, eros. Proin euismod. Sed ornare odio ut turpis. Curabitur consectetuer ante non risus. Nullam eleifend diam vitae tortor. In neque tortor, placerat et, vestibulum nec, aliquet eget, turpis. Morbi venenatis imperdiet risus. Maecenas sed sem. Ut malesuada tristique velit. Nam at arcu a eros facilisis nonummy. Ut ultricies erat et enim. Proin libero.</p>
+
+{% endblock %}
+
+    </div>
+  <br class="clearfloat" />
+</div>
+</div>
+
+<div style='float:left;clear:both;' id="footer_container">
+<div id="footer">
+  <p>©  Copyright Brian R. Bondy</p>
+  <!-- end #footer -->
+    </div>
+    </div>
+
+<script type="text/javascript" src="/static/prettify/prettify.js"></script>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+
+{% block extra_body %}{% endblock %}
+
+</body>
+</html>
+
