@@ -35,5 +35,8 @@ nosetests.xml
 .project
 .pydevproject
 
+*.py~
+*.DS_Store
+
 # secrets
 settings.py
