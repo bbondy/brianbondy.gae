@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% load markup %}
-{% load mytags %}
+{#{% load markup %} #}
+{#{% load mytags %}#}
 
 {% block title %} {{pagetitle}} {% endblock %}
 {% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
@@ -122,7 +122,7 @@ function toggleTags()
     <tr class="comment">
       <td class="comment-text">
         <p>
-          {% show_gravatar comment.email 80 %}
+          {#{% show_gravatar comment.email 80 %}#}
           <a rel="external nofollow" href="{{ comment.homepage}}">{{comment.name}}</a> on 
           <small class="comment-date">{{comment.posted_date|date:"l, F d, Y (h:m:s)"}}</small> says:<br/>
           {{comment.body|linebreaks}}
