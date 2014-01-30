@@ -1,5 +1,7 @@
 import os
-from google.appengine.api import users
+from flask import Flask
+
+application = Flask(__name__)
 
 # A singleton shared across requests
 class App(object):

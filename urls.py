@@ -1,214 +1,202 @@
 import logging
 import settings
-import webapp2
+from app import *
 from handlers import *
 
-from webapp2_extras.routes import RedirectRoute as rurl
+from flask import Flask
+from flask import render_template
+from flask import request
+from flask import jsonify
 
-routes = [
-  webapp2.Route(r'/', handler=MainHandler),
-  #webapp2.Route(r'/page/<page:\d+>', handler=MainHandler),
-  #webapp2.Route(r'/blog/page/<page:\d+>', handler=MainHandler),
-  #webapp2.Route(r'/blog/posted/<year:\d+>', handler=MainHandler),
-  #webapp2.Route(r'/blog/posted/<year:\d+>/page/<page:\d+>', handler=MainHandler),
-  #webapp2.Route(r'/blog/modified/(?P<year>\d{4})/', index),
-  #webapp2.Route(r'/blog/modified/(?P<year>\d{4})/page/(?P<page>\d+)/', index),
-  #webapp2.Route(r'/blog/tagged/(?P<tagged>[^/]*)/', index),
-  #webapp2.Route(r'/blog/tagged/(?P<tagged>[^/]*)/page/(?P<page>\d+)/', index),
-  #webapp2.Route(r'/blog/posted/recent/', index),
-  #webapp2.Route(r'/blog/posted/recent/page/(?P<page>\d+)/', index),
-  #webapp2.Route(r'/blog/modified/recent/', index, {'recently_modified' : 'True'}),
-  #webapp2.Route(r'/blog/modified/recent/page/(?P<page>\d+)/', index, {'recently_modified' : 'True'}),
-  #webapp2.Route(r'/blog/id/(?P<wanted_id>\d+)/', index),    
-  #webapp2.Route(r'/drafts/', index, {'drafts':'True'}),
-  #webapp2.Route(r'/blog/posted/(\d{4})/drafts/', index, {'drafts':'True'}),
-  #webapp2.Route(r'/blog/modified/(\d{4})/drafts/', index, {'drafts':'True'}),
-  #webapp2.Route(r'/blog/posted/recent/drafts/', index, {'drafts':'True'}),
-  #webapp2.Route(r'/blog/modified/recent/drafts/', index, {'recently_modified' : 'True', 'drafts':'True'}),
+#@application.route(r'/', handler=MainHandler)
+#@application.route(r'/page/<page:\d+>', handler=MainHandler)
+#@application.route(r'/blog/page/<page:\d+>', handler=MainHandler)
+#@application.route(r'/blog/posted/<year:\d+>', handler=MainHandler)
+#@application.route(r'/blog/posted/<year:\d+>/page/<page:\d+>', handler=MainHandler)
+#@application.route(r'/blog/modified/(?P<year>\d{4})/', index)
+#@application.route(r'/blog/modified/(?P<year>\d{4})/page/(?P<page>\d+)/', index)
+#@application.route(r'/blog/tagged/(?P<tagged>[^/]*)/', index)
+#@application.route(r'/blog/tagged/(?P<tagged>[^/]*)/page/(?P<page>\d+)/', index)
+#@application.route(r'/blog/posted/recent/', index)
+#@application.route(r'/blog/posted/recent/page/(?P<page>\d+)/', index)
+#@application.route(r'/blog/modified/recent/', index, {'recently_modified' : 'True'})
+#@application.route(r'/blog/modified/recent/page/(?P<page>\d+)/', index, {'recently_modified' : 'True'})
+#@application.route(r'/blog/id/(?P<wanted_id>\d+)/', index)    
+#@application.route(r'/drafts/', index, {'drafts':'True'})
+#@application.route(r'/blog/posted/(\d{4})/drafts/', index, {'drafts':'True'})
+#@application.route(r'/blog/modified/(\d{4})/drafts/', index, {'drafts':'True'})
+#@application.route(r'/blog/posted/recent/drafts/', index, {'drafts':'True'})
+#@application.route(r'/blog/modified/recent/drafts/', index, {'recently_modified' : 'True', 'drafts':'True'})
 
-  #Blog comments TODO: rewrite this
-  #webapp2.Route(r'^blog/comments/id/(?P<wanted_id>\d+)/', post_comment),    
-  #webapp2.Route(r'^comments/', include('django.contrib.comments.urls')),
+#Blog comments TODO: rewrite this
+#@application.route(r'^blog/comments/id/(?P<wanted_id>\d+)/', post_comment)    
+#@application.route(r'^comments/', include('django.contrib.comments.urls'))
 
-  webapp2.Route(r'/other/whatsMyIP<:/?>', handler=WhatsMyIPHandler),
+#@application.route(r'/other/whatsMyIP/', handler=WhatsMyIPHandler)
+#@application.route(r'/resume/pdf/', handler=ResumePDFHandler)
 
-  webapp2.Route(r'/test<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'test.html'} ),
-  webapp2.Route(r'/contact<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'contact.html'}),
-  webapp2.Route(r'/about<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'about.html'}),
-  webapp2.Route(r'/other<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'other.html'}),
-  webapp2.Route(r'/other/books<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'books.html'}),
-  webapp2.Route(r'/other/advice<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'advice.html'}),
-  webapp2.Route(r'/other/universityClasses<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'university_classes.html'}),
-  webapp2.Route(r'/other/braille<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'braille.html'}),
-  webapp2.Route(r'/other/morseCode<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'morse_code.html'}),
-  webapp2.Route(r'/other/base64Encoding/<:/?>', handler=DirectTemplateHandler, defaults={'tmpl':  'base64_encoding.html'}),
-  webapp2.Route(r'/other/binaryASCII<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'binary_ASCII.html'}),
-  webapp2.Route(r'/other/URLEncoding<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'URL_encoding.html'}),
-  webapp2.Route(r'/other/articles<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'articles.html'}),
-  webapp2.Route(r'/other/faq<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'faq.html'}),
-  webapp2.Route(r'/other/links<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'links.html'}),
+#RSS all, or by tag
+#@application.route(r'/feeds/rss/', handler=RSSHandler)
+#@application.route(r'/feeds/rss/<tagged:.+>/', handler=RSSHandler)
 
-  webapp2.Route(r'/talks<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'talks.html'}),
-  webapp2.Route(r'/talks/2012-work-week-win8<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': '2012-firefox-work-week/index.html'}),
-
-  #aliases for when some of the other links were top level
-  webapp2.Route(r'/articles<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'articles.html'}),
-  webapp2.Route(r'/faq<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'faq.html'}),
-  webapp2.Route(r'/links<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'links.html'}),
-
-  webapp2.Route(r'/resume<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'resume.html'}),
-  webapp2.Route(r'/resume/pdf<:/?>', handler=ResumePDFHandler),
-
-  webapp2.Route(r'/test<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'test.html'}),
-
-  webapp2.Route(r'/projects<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'projects.html'}),
-
-  webapp2.Route(r'/mozilla<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla.html'}),
-  webapp2.Route(r'/mozilla/cheatsheet<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla_cheatsheet.html'}),
-  webapp2.Route(r'/mozilla/new<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla_new.html'}),
-  webapp2.Route(r'/mozilla/xpcom<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla_xpcom.html'}),
-  webapp2.Route(r'/mozilla/xulrunner<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla_xulrunner.html'}),
-  webapp2.Route(r'/mozilla/extension<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'mozilla_extension.html'}),
-
-  webapp2.Route(r'/stackexchange<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'stackexchange.html'}),
-  webapp2.Route(r'/khanacademy<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'khanacademy.html'}),
-  webapp2.Route(r'/khanacademy/cheatsheet<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'khanacademy_cheatsheet.html'}),
-
-  webapp2.Route(r'/math<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'math.html'}),
-  webapp2.Route(r'/math/pi<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'pi.html'}),
-  webapp2.Route(r'/math/primes<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'primes.html'}),
-  webapp2.Route(r'/math/numberTheory<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'number_theory.html'}),
-  webapp2.Route(r'/math/graphTheory<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'graph_theory.html'}),
-
-  webapp2.Route(r'/compression<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'compression.html'}),
-  webapp2.Route(r'/compression/huffman<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'huffman.html' }),
-  webapp2.Route(r'/compression/BWT<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'BWT.html'}),
-  webapp2.Route(r'/compression/PPM<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'PPM.html'}),
-
-  webapp2.Route(r'/math/mathTricks<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'math_tricks.html'}),
-
-  #RSS all, or by tag
-  webapp2.Route(r'/feeds/rss<:/?>', handler=RSSHandler),
-  webapp2.Route(r'/feeds/rss/<tagged:.+><:/?>', handler=RSSHandler),
-
-  #Web apps
-  webapp2.Route(r'/webapp_install<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'webapp_install.html'}),
-
-  #Twitter list links
-  webapp2.Route(r'/stackexchange-twitter/cooking<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Cooking.html'}),
-  webapp2.Route(r'/stackexchange-twitter/gamedevelopment<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/GameDevelopment.html'}),
-  webapp2.Route(r'/stackexchange-twitter/gaming<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Gaming.html'}),
-  webapp2.Route(r'/stackexchange-twitter/mathematics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Mathematics.html'}),
-  webapp2.Route(r'/stackexchange-twitter/photography<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Photography.html'}),
-  webapp2.Route(r'/stackexchange-twitter/serverfault<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ServerFault.html'}),
-  webapp2.Route(r'/stackexchange-twitter/stackapps<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/StackApps.html'}),
-  webapp2.Route(r'/stackexchange-twitter/stackoverflow<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/StackOverflow.html'}),
-  webapp2.Route(r'/stackexchange-twitter/statisticalanalysis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/StatisticalAnalysis.html'}),
-  webapp2.Route(r'/stackexchange-twitter/superuser<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/SuperUser.html'}),
-  webapp2.Route(r'/stackexchange-twitter/ubuntu<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/AskUbuntu.html'}),
-  webapp2.Route(r'/stackexchange-twitter/webapplications<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/WebApplications.html'}),
-  webapp2.Route(r'/stackexchange-twitter/webmasters<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/WebMasters.html'}),
-  webapp2.Route(r'/stackexchange-twitter/englishusage<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/EnglishLanguageandUsage.html'}),
-  webapp2.Route(r'/stackexchange-twitter/programmers<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Programmers.html'}),
-  webapp2.Route(r'/stackexchange-twitter/texlatex<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/TeX-LaTeX.html'}),
-  webapp2.Route(r'/stackexchange-twitter/theoreticalcs<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/TheoreticalComputerScience.html'}),
-  webapp2.Route(r'/stackexchange-twitter/android<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Android.html'}),
-  webapp2.Route(r'/stackexchange-twitter/apple<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Apple.html'}),
-  webapp2.Route(r'/stackexchange-twitter/doityourself<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/DoItYourself.html'}),
-  webapp2.Route(r'/stackexchange-twitter/electronics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Electronics.html'}),
-  webapp2.Route(r'/stackexchange-twitter/gis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/GeographicInformationSystems.html'}),
-  webapp2.Route(r'/stackexchange-twitter/unix<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Unix.html'}),
-  webapp2.Route(r'/stackexchange-twitter/wordpress<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Wordpress.html'}),
-
-  #LinkedIn list links
-  webapp2.Route(r'/stackexchange-linkedin/cooking<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Cooking.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/gamedevelopment<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GameDevelopment.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/gaming<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Gaming.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/mathematics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Mathematics.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/photography<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Photography.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/serverfault<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-ServerFault.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/stackapps<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StackApps.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/stackoverflow<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StackOverflow.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/statisticalanalysis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StatisticalAnalysis.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/superuser<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-SuperUser.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/ubuntu<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-AskUbuntu.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/webapplications<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-WebApplications.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/webmasters<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-WebMasters.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/englishusage<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-EnglishLanguageandUsage.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/programmers<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Programmers.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/texlatex<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-TeX-LaTeX.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/theoreticalcs<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-TheoreticalComputerScience.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/android<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Android.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/apple<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Apple.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/doityourself<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-DoItYourself.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/electronics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Electronics.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/gis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GeographicInformationSystems.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/unix<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Unix.html'}),
-  webapp2.Route(r'/stackexchange-linkedin/wordpress<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Wordpress.html'}),
-
-  #Facebook list links
-  webapp2.Route(r'/stackexchange-facebook/cooking<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Cooking.html'}),
-  webapp2.Route(r'/stackexchange-facebook/gamedevelopment<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-GameDevelopment.html'}),
-  webapp2.Route(r'/stackexchange-facebook/gaming<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Gaming.html'}),
-  webapp2.Route(r'/stackexchange-facebook/mathematics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Mathematics.html'}),
-  webapp2.Route(r'/stackexchange-facebook/photography<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Photography.html'}),
-  webapp2.Route(r'/stackexchange-facebook/serverfault<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-ServerFault.html'}),
-  webapp2.Route(r'/stackexchange-facebook/stackapps<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-StackApps.html'}),
-  webapp2.Route(r'/stackexchange-facebook/stackoverflow<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-StackOverflow.html'}),
-  webapp2.Route(r'/stackexchange-facebook/statisticalanalysis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-StatisticalAnalysis.html'}),
-  webapp2.Route(r'/stackexchange-facebook/superuser<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-SuperUser.html'}),
-  webapp2.Route(r'/stackexchange-facebook/ubuntu<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-AskUbuntu.html'}),
-  webapp2.Route(r'/stackexchange-facebook/webapplications<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-WebApplications.html'}),
-  webapp2.Route(r'/stackexchange-facebook/webmasters<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-WebMasters.html'}),
-  webapp2.Route(r'/stackexchange-facebook/englishusage<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-EnglishLanguageandUsage.html'}),
-  webapp2.Route(r'/stackexchange-facebook/programmers<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Programmers.html'}),
-  webapp2.Route(r'/stackexchange-facebook/texlatex<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-TeX-LaTeX.html'}),
-  webapp2.Route(r'/stackexchange-facebook/theoreticalcs<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-TheoreticalComputerScience.html'}),
-  webapp2.Route(r'/stackexchange-facebook/android<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Android.html'}),
-  webapp2.Route(r'/stackexchange-facebook/apple<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Apple.html'}),
-  webapp2.Route(r'/stackexchange-facebook/doityourself<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-DoItYourself.html'}),
-  webapp2.Route(r'/stackexchange-facebook/electronics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Electronics.html'}),
-  webapp2.Route(r'/stackexchange-facebook/gis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-GeographicInformationSystems.html'}),
-  webapp2.Route(r'/stackexchange-facebook/unix<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Unix.html'}),
-  webapp2.Route(r'/stackexchange-facebook/wordpress<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/Facebook-Wordpress.html'}),
-
-  # Expected age list links
-  webapp2.Route(r'/stackexchange/expected-age/cooking<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Cooking.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/gamedevelopment<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-GameDevelopment.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/gaming<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Gaming.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/mathematics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Mathematics.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/photography<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Photography.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/serverfault<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-ServerFault.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/stackapps<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StackApps.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/stackoverflow<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StackOverflow.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/statisticalanalysis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StatisticalAnalysis.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/superuser<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-SuperUser.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/ubuntu<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-AskUbuntu.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/webapplications<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-WebApplications.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/webmasters<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Webmasters.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/englishusage<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-EnglishLanguageandUsage.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/programmers<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Programmers.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/texlatex<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-TeX-LaTeX.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/theoreticalcs<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-TheoreticalComputerScience.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/android<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Android.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/apple<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Apple.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/doityourself<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-DoItYourself.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/electronics<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Electronics.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/gis<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-GeographicInformationSystems.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/unix<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Unix.html'}),
-  webapp2.Route(r'/stackexchange/expected-age/wordpress<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Wordpress.html'}),
-
-  webapp2.Route(r'/facebook/pimemorize<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'facebook/pimemorize.html'}),
-  webapp2.Route(r'/maze<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'maze.html'}),  
-
-  # Administer the site
-  webapp2.Route(r'/admin/tags<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'admin/tags.html'}),
-  webapp2.Route(r'/admin/news_item_tags<:/?>', handler=DirectTemplateHandler, defaults={'tmpl': 'admin/newsItemTags.html'}),
-  #webapp2.Route(r'^admin/', admin_index),
-  #webapp2.Route(r'^admin/news_items/', admin_news_items),
-  #webapp2.Route(r'^admin/news_items/(?P<news_item_id>\d+)/', admin_news_item),
-  #webapp2.Route(r'^admin/news_items/add/', admin_news_item),
-  #webApp2.Route(r'^admin/news_item_comments/', admin_news_item_comments),
-  #webApp2.Route(r'^admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment),
-  #webApp2.Route(r'^admin/clear_memcache/', clear_memcache),
-]
+@application.route(r'/test/', defaults={'tmpl': 'test.html'} )
+@application.route(r'/contact/', defaults={'tmpl': 'contact.html'})
+@application.route('/about/', defaults={'tmpl': 'about.html'})
+@application.route('/about/', defaults={'tmpl': 'about.html'})
+@application.route(r'/other/', defaults={'tmpl': 'other.html'})
+@application.route(r'/other/books/', defaults={'tmpl': 'books.html'})
+@application.route(r'/other/advice/', defaults={'tmpl': 'advice.html'})
+@application.route(r'/other/universityClasses/', defaults={'tmpl': 'university_classes.html'})
+@application.route(r'/other/braille/', defaults={'tmpl': 'braille.html'})
+@application.route(r'/other/morseCode/', defaults={'tmpl': 'morse_code.html'})
+@application.route(r'/other/base64Encoding//', defaults={'tmpl':  'base64_encoding.html'})
+@application.route(r'/other/binaryASCII/', defaults={'tmpl': 'binary_ASCII.html'})
+@application.route(r'/other/URLEncoding/', defaults={'tmpl': 'URL_encoding.html'})
+@application.route(r'/other/articles/', defaults={'tmpl': 'articles.html'})
+@application.route(r'/other/faq/', defaults={'tmpl': 'faq.html'})
+@application.route(r'/other/links/', defaults={'tmpl': 'links.html'})
+@application.route(r'/talks/', defaults={'tmpl': 'talks.html'})
+@application.route(r'/talks/2012-work-week-win8/', defaults={'tmpl': '2012-firefox-work-week/index.html'})
+#aliases for when some of the other links were top level
+@application.route(r'/articles/', defaults={'tmpl': 'articles.html'})
+@application.route(r'/faq/', defaults={'tmpl': 'faq.html'})
+@application.route(r'/links/', defaults={'tmpl': 'links.html'})
+@application.route(r'/resume/', defaults={'tmpl': 'resume.html'})
+@application.route(r'/test/', defaults={'tmpl': 'test.html'})
+@application.route(r'/projects/', defaults={'tmpl': 'projects.html'})
+@application.route(r'/mozilla/', defaults={'tmpl': 'mozilla.html'})
+@application.route(r'/mozilla/cheatsheet/', defaults={'tmpl': 'mozilla_cheatsheet.html'})
+@application.route(r'/mozilla/new/', defaults={'tmpl': 'mozilla_new.html'})
+@application.route(r'/mozilla/xpcom/', defaults={'tmpl': 'mozilla_xpcom.html'})
+@application.route(r'/mozilla/xulrunner/', defaults={'tmpl': 'mozilla_xulrunner.html'})
+@application.route(r'/mozilla/extension/', defaults={'tmpl': 'mozilla_extension.html'})
+@application.route(r'/stackexchange/', defaults={'tmpl': 'stackexchange.html'})
+@application.route(r'/khanacademy/', defaults={'tmpl': 'khanacademy.html'})
+@application.route(r'/khanacademy/cheatsheet/', defaults={'tmpl': 'khanacademy_cheatsheet.html'})
+@application.route(r'/math/', defaults={'tmpl': 'math.html'})
+@application.route(r'/math/pi/', defaults={'tmpl': 'pi.html'})
+@application.route(r'/math/primes/', defaults={'tmpl': 'primes.html'})
+@application.route(r'/math/numberTheory/', defaults={'tmpl': 'number_theory.html'})
+@application.route(r'/math/graphTheory/', defaults={'tmpl': 'graph_theory.html'})
+@application.route(r'/compression/', defaults={'tmpl': 'compression.html'})
+@application.route(r'/compression/huffman/', defaults={'tmpl': 'huffman.html' })
+@application.route(r'/compression/BWT/', defaults={'tmpl': 'BWT.html'})
+@application.route(r'/compression/PPM/', defaults={'tmpl': 'PPM.html'})
+@application.route(r'/math/mathTricks/', defaults={'tmpl': 'math_tricks.html'})
+#Web apps
+@application.route(r'/webapp_install/', defaults={'tmpl': 'webapp_install.html'})
+#Twitter list links
+@application.route(r'/stackexchange-twitter/cooking/', defaults={'tmpl': 'StackExchangeTwitter/Cooking.html'})
+@application.route(r'/stackexchange-twitter/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/GameDevelopment.html'})
+@application.route(r'/stackexchange-twitter/gaming/', defaults={'tmpl': 'StackExchangeTwitter/Gaming.html'})
+@application.route(r'/stackexchange-twitter/mathematics/', defaults={'tmpl': 'StackExchangeTwitter/Mathematics.html'})
+@application.route(r'/stackexchange-twitter/photography/', defaults={'tmpl': 'StackExchangeTwitter/Photography.html'})
+@application.route(r'/stackexchange-twitter/serverfault/', defaults={'tmpl': 'StackExchangeTwitter/ServerFault.html'})
+@application.route(r'/stackexchange-twitter/stackapps/', defaults={'tmpl': 'StackExchangeTwitter/StackApps.html'})
+@application.route(r'/stackexchange-twitter/stackoverflow/', defaults={'tmpl': 'StackExchangeTwitter/StackOverflow.html'})
+@application.route(r'/stackexchange-twitter/statisticalanalysis/', defaults={'tmpl': 'StackExchangeTwitter/StatisticalAnalysis.html'})
+@application.route(r'/stackexchange-twitter/superuser/', defaults={'tmpl': 'StackExchangeTwitter/SuperUser.html'})
+@application.route(r'/stackexchange-twitter/ubuntu/', defaults={'tmpl': 'StackExchangeTwitter/AskUbuntu.html'})
+@application.route(r'/stackexchange-twitter/webapplications/', defaults={'tmpl': 'StackExchangeTwitter/WebApplications.html'})
+@application.route(r'/stackexchange-twitter/webmasters/', defaults={'tmpl': 'StackExchangeTwitter/WebMasters.html'})
+@application.route(r'/stackexchange-twitter/englishusage/', defaults={'tmpl': 'StackExchangeTwitter/EnglishLanguageandUsage.html'})
+@application.route(r'/stackexchange-twitter/programmers/', defaults={'tmpl': 'StackExchangeTwitter/Programmers.html'})
+@application.route(r'/stackexchange-twitter/texlatex/', defaults={'tmpl': 'StackExchangeTwitter/TeX-LaTeX.html'})
+@application.route(r'/stackexchange-twitter/theoreticalcs/', defaults={'tmpl': 'StackExchangeTwitter/TheoreticalComputerScience.html'})
+@application.route(r'/stackexchange-twitter/android/', defaults={'tmpl': 'StackExchangeTwitter/Android.html'})
+@application.route(r'/stackexchange-twitter/apple/', defaults={'tmpl': 'StackExchangeTwitter/Apple.html'})
+@application.route(r'/stackexchange-twitter/doityourself/', defaults={'tmpl': 'StackExchangeTwitter/DoItYourself.html'})
+@application.route(r'/stackexchange-twitter/electronics/', defaults={'tmpl': 'StackExchangeTwitter/Electronics.html'})
+@application.route(r'/stackexchange-twitter/gis/', defaults={'tmpl': 'StackExchangeTwitter/GeographicInformationSystems.html'})
+@application.route(r'/stackexchange-twitter/unix/', defaults={'tmpl': 'StackExchangeTwitter/Unix.html'})
+@application.route(r'/stackexchange-twitter/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/Wordpress.html'})
+#LinkedIn list links
+@application.route(r'/stackexchange-linkedin/cooking/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Cooking.html'})
+@application.route(r'/stackexchange-linkedin/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GameDevelopment.html'})
+@application.route(r'/stackexchange-linkedin/gaming/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Gaming.html'})
+@application.route(r'/stackexchange-linkedin/mathematics/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Mathematics.html'})
+@application.route(r'/stackexchange-linkedin/photography/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Photography.html'})
+@application.route(r'/stackexchange-linkedin/serverfault/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-ServerFault.html'})
+@application.route(r'/stackexchange-linkedin/stackapps/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StackApps.html'})
+@application.route(r'/stackexchange-linkedin/stackoverflow/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StackOverflow.html'})
+@application.route(r'/stackexchange-linkedin/statisticalanalysis/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-StatisticalAnalysis.html'})
+@application.route(r'/stackexchange-linkedin/superuser/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-SuperUser.html'})
+@application.route(r'/stackexchange-linkedin/ubuntu/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-AskUbuntu.html'})
+@application.route(r'/stackexchange-linkedin/webapplications/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-WebApplications.html'})
+@application.route(r'/stackexchange-linkedin/webmasters/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-WebMasters.html'})
+@application.route(r'/stackexchange-linkedin/englishusage/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-EnglishLanguageandUsage.html'})
+@application.route(r'/stackexchange-linkedin/programmers/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Programmers.html'})
+@application.route(r'/stackexchange-linkedin/texlatex/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-TeX-LaTeX.html'})
+@application.route(r'/stackexchange-linkedin/theoreticalcs/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-TheoreticalComputerScience.html'})
+@application.route(r'/stackexchange-linkedin/android/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Android.html'})
+@application.route(r'/stackexchange-linkedin/apple/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Apple.html'})
+@application.route(r'/stackexchange-linkedin/doityourself/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-DoItYourself.html'})
+@application.route(r'/stackexchange-linkedin/electronics/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Electronics.html'})
+@application.route(r'/stackexchange-linkedin/gis/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GeographicInformationSystems.html'})
+@application.route(r'/stackexchange-linkedin/unix/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Unix.html'})
+@application.route(r'/stackexchange-linkedin/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Wordpress.html'})
+#Facebook list links
+@application.route(r'/stackexchange-facebook/cooking/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Cooking.html'})
+@application.route(r'/stackexchange-facebook/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-GameDevelopment.html'})
+@application.route(r'/stackexchange-facebook/gaming/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Gaming.html'})
+@application.route(r'/stackexchange-facebook/mathematics/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Mathematics.html'})
+@application.route(r'/stackexchange-facebook/photography/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Photography.html'})
+@application.route(r'/stackexchange-facebook/serverfault/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-ServerFault.html'})
+@application.route(r'/stackexchange-facebook/stackapps/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-StackApps.html'})
+@application.route(r'/stackexchange-facebook/stackoverflow/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-StackOverflow.html'})
+@application.route(r'/stackexchange-facebook/statisticalanalysis/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-StatisticalAnalysis.html'})
+@application.route(r'/stackexchange-facebook/superuser/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-SuperUser.html'})
+@application.route(r'/stackexchange-facebook/ubuntu/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-AskUbuntu.html'})
+@application.route(r'/stackexchange-facebook/webapplications/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-WebApplications.html'})
+@application.route(r'/stackexchange-facebook/webmasters/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-WebMasters.html'})
+@application.route(r'/stackexchange-facebook/englishusage/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-EnglishLanguageandUsage.html'})
+@application.route(r'/stackexchange-facebook/programmers/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Programmers.html'})
+@application.route(r'/stackexchange-facebook/texlatex/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-TeX-LaTeX.html'})
+@application.route(r'/stackexchange-facebook/theoreticalcs/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-TheoreticalComputerScience.html'})
+@application.route(r'/stackexchange-facebook/android/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Android.html'})
+@application.route(r'/stackexchange-facebook/apple/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Apple.html'})
+@application.route(r'/stackexchange-facebook/doityourself/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-DoItYourself.html'})
+@application.route(r'/stackexchange-facebook/electronics/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Electronics.html'})
+@application.route(r'/stackexchange-facebook/gis/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-GeographicInformationSystems.html'})
+@application.route(r'/stackexchange-facebook/unix/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Unix.html'})
+@application.route(r'/stackexchange-facebook/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Wordpress.html'})
+# Expected age list links
+@application.route(r'/stackexchange/expected-age/cooking/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Cooking.html'})
+@application.route(r'/stackexchange/expected-age/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-GameDevelopment.html'})
+@application.route(r'/stackexchange/expected-age/gaming/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Gaming.html'})
+@application.route(r'/stackexchange/expected-age/mathematics/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Mathematics.html'})
+@application.route(r'/stackexchange/expected-age/photography/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Photography.html'})
+@application.route(r'/stackexchange/expected-age/serverfault/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-ServerFault.html'})
+@application.route(r'/stackexchange/expected-age/stackapps/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StackApps.html'})
+@application.route(r'/stackexchange/expected-age/stackoverflow/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StackOverflow.html'})
+@application.route(r'/stackexchange/expected-age/statisticalanalysis/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-StatisticalAnalysis.html'})
+@application.route(r'/stackexchange/expected-age/superuser/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-SuperUser.html'})
+@application.route(r'/stackexchange/expected-age/ubuntu/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-AskUbuntu.html'})
+@application.route(r'/stackexchange/expected-age/webapplications/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-WebApplications.html'})
+@application.route(r'/stackexchange/expected-age/webmasters/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Webmasters.html'})
+@application.route(r'/stackexchange/expected-age/englishusage/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-EnglishLanguageandUsage.html'})
+@application.route(r'/stackexchange/expected-age/programmers/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Programmers.html'})
+@application.route(r'/stackexchange/expected-age/texlatex/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-TeX-LaTeX.html'})
+@application.route(r'/stackexchange/expected-age/theoreticalcs/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-TheoreticalComputerScience.html'})
+@application.route(r'/stackexchange/expected-age/android/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Android.html'})
+@application.route(r'/stackexchange/expected-age/apple/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Apple.html'})
+@application.route(r'/stackexchange/expected-age/doityourself/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-DoItYourself.html'})
+@application.route(r'/stackexchange/expected-age/electronics/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Electronics.html'})
+@application.route(r'/stackexchange/expected-age/gis/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-GeographicInformationSystems.html'})
+@application.route(r'/stackexchange/expected-age/unix/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Unix.html'})
+@application.route(r'/stackexchange/expected-age/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Wordpress.html'})
+@application.route(r'/facebook/pimemorize/', defaults={'tmpl': 'facebook/pimemorize.html'})
+@application.route(r'/maze/', defaults={'tmpl': 'maze.html'})  
+# Administer the site
+#@application.route(r'/admin/tags/', defaults={'tmpl': 'admin/tags.html'})
+#@application.route(r'/admin/news_item_tags/', defaults={'tmpl': 'admin/newsItemTags.html'})
+#@application.route(r'^admin/', admin_index)
+#@application.route(r'^admin/news_items/', admin_news_items)
+#@application.route(r'^admin/news_items/(?P<news_item_id>\d+)/', admin_news_item)
+#@application.route(r'^admin/news_items/add/', admin_news_item)
+#@application.route(r'^admin/news_item_comments/', admin_news_item_comments)
+#@application.route(r'^admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
+#@application.route(r'^admin/clear_memcache/', clear_memcache)
+def directTemplate(tmpl, name=None):
+  return render_template(tmpl, name=name);
+  
