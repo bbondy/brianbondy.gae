@@ -23,7 +23,8 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
   _KEY_PREFIX = 'NewsItem'
   
   def getJSONData(self):
-    return { 'title': self.title,
+    return { 'id': self.id(),
+             'title': self.title,
              'body': self.body,
              'posted_date': str(self.posted_date),
              'last_modified_date': str(self.last_modified_date),
