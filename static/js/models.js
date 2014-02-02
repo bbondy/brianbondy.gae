@@ -1,6 +1,6 @@
 define(['backbone'], function(_) {
 
-  var NewsItemModel = Backbone.Model.extend({
+  var NewsItem = Backbone.Model.extend({
     urlRoot: '/newsItems/',
     initialize: function() {
     },
@@ -12,16 +12,19 @@ define(['backbone'], function(_) {
       last_modified_date: new Date(),
       draft: true
     },
+    tagsStr: function() {
+      return this.get('tags').join(', ');
+    },
   });
 
-  var NewsItemList = Backbone.Collection.extend({
+  var NewsItems = Backbone.Collection.extend({
     url: '/newsItems/',
-    model: NewsItemModel
+    model: NewsItem
   });
 
   return {
-    NewsItemModel: NewsItemModel,
-    NewsItemList: NewsItemList
+    NewsItem: NewsItem,
+    NewsItems: NewsItems
   };
 });
 

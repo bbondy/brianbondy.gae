@@ -1,33 +1,21 @@
 {% extends "base.html" %}
 
-{% load markup %}
-{% load mytags %}
+{#{% load markup %}#}
+{#{% load mytags %}#}
 
-{% block title %} Administer NewsItem ID {{ news_item.id }} {% endblock %}
+{% block title %} Administer NewsItem {% endblock %}
 {% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
-{% block subtitle %} Title: {{ news_item.title }} {% endblock %}
+{% block subtitle %} Title: Admin News Item {% endblock %}
 {% block body_id %}body_blog{% endblock %}
 
 {% block main_content %}
 
-<form action="{{submit_url}}" method="POST">
-{{ form.as_p }}
-<p>
-	<label for="id_tags">Tags:</label>
-	<input type="text" name="tags" id="id_tags" size="60" 
-	value="{{news_item_tags}}"/>
-</p>
-<input type="submit" name='submit' value="Save Continue" />
-<input type="submit" name='submit' value="Save Done" />
-<br>
-<br>
-<br>
-<br>
-<br>
-{% if news_item_id != None %}
-<input type="submit" name='submit' value="Delete" />
-{% endif %}
+<script type="text/javascript">
+  var newsItemId = {{news_item_id}}
+  require(['jsx!newsItem'], function() {
+  });
+</script>
 
-</form>
+<div id="news-item-form"/>
 
 {% endblock %}

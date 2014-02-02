@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% load markup %}
-{% load mytags %}
+{#{% load markup %}#}
+{#{% load mytags %}#}
 
 {% block title %} Administer brianbondy.com {% endblock %}
 {% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
@@ -23,10 +23,11 @@
 
 <p>
 <ul>
-{% for stat in stats.iteritems %}
+{% for stat in memcache_stats %}
 
-  <li>{{ stat.0 }}: {{ stat.1 }}</li>
+  <li>{{ stat }}: {{ memcache_stats[stat] }}</li>
 {% endfor %}
+
 </ul>
 </p>
 

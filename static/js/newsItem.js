@@ -7,26 +7,50 @@
 define(['models', 'react', 'showdown'], function(models, React, Showdown) {
 
 
-  console.log('hi');
-  var NewsItemModel = models.NewsItemModel;
   var converter = new Showdown.converter();
 
   /**
    * The HTML form for filling out the blog post
    */
   var NewsItemForm = React.createClass({
-    handleSubmit: function() {
+     getInitialState: function() {
+      if (newsItemId) {
+        return { newsItem: new models.NewsItem( { id: newsItemId }) };
+      } else {
+        return { newsItem: new models.NewsItem() };
+      }
+    },
+
+    loadFromServer: function() {
+       if (newsItemId) {
+         var newsItem = this.state.newsItem;
+         newsItem.fetch().done(function() {
+           this.setState({ newsItem: newsItem });
+         }.bind(this));
+       }
+     },
+
+    componentWillMount: function() {
+      this.loadFromServer();
+      setInterval(this.loadFromServer, 60 * 1000);
+    },
+
+    handleSubmit: function(event) {
+    event.preventDefault();
+      var title = this.refs.title.getDOMNode().value.trim();
       var body = this.refs.body.getDOMNode().value.trim();
       var tagsStr = this.refs.tags.getDOMNode().value.trim();
       var draft = this.refs.draft.getDOMNode().checked;
-      body = body.replace(/(<([^>]+)>)/ig,'');
-      if (!body) {
+      // Normally you want to filter out HTML here but this is from an authenticated trusted source
+      //body = body.replace(/(<([^>]+)>)/ig,'');
+      //title = title.replace(/(<([^>]+)>)/ig,'');
+      if (!title || !body) {
         return false;
       }
-      var newsItem = new NewsItemModel({body: body, tags: tagsStr.split(',')});
-      newsItem.draft = draft;
-      newsItem.save();
-      this.refs.body.getDOMNode().value = '';
+      this.state.newsItem.set({body: body, title: title, tags: tagsStr.split(','), draft: draft});
+      this.state.newsItem.save().done(function(newsItem) {
+        alert('saved!');
+      }.bind(this));
       return false;
     },
     handleSaveAndContinue: function() {
@@ -41,19 +65,35 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
       if (!confirm('Are you sure you want to remove this blog post completely?')) {
         return;
       }
+      this.state.newsItem.destroy().done(function() {
+        location.href = '/admin1/newsItems/';
+      }.bind(this));
+    },
+    handleChange: function(event) {
+      var id = event.target.id;
+      var val = event.target.value;
+      if (id === 'draft')
+        val = event.target.checked;
+      this.state.newsItem.set(id, val);
+      this.setState({ });
     },
     render: function() {
       return (
+        <div>
         <form className='NewsItemForm' onSubmit={this.handleSubmit}>
-          <textarea className='newsItem' rows='6' cols='200' placeholder='Blog post in markdown here!' ref='body' />
+          <input className='newsItem' type='text' id='title' ref='title' size='60' placeholder='Title of the blog post' value={this.state.newsItem.get('title')} onChange={this.handleChange} />
+          <textarea className='newsItem' rows='6' cols='200' placeholder='Blog post in markdown here!' ref='body' id='body' value={this.state.newsItem.get('body')} onChange={this.handleChange} />
           <br/>
-          <label for='id_tags' className='newsItem'>Tags:</label>
-          <input className='newsItem' type='text' name='tags' id='id_tags' ref='tags' size='60' placeholder='Comma separated list of tags here'/>
-          <input className='newsItem' type='checkbox' ref='draft' checked>Draft</input>
-          <input className='newsItem' type='submit' name='submit' value='Save Continue' onSubmit={this.handleSaveAndContinue}/>
-          <input classname='newsItem' type='submit' name='submit' value='Save Done' onSubmit={this.handleSaveAndDone}/>
-          <input className='newsItem' type='submit' name='submit' value='Delete' onSubmit={this.handleDelete}/>
+          <label htmlFor='tags' className='newsItem'>Tags:</label>
+          <input className='newsItem' type='text' id='tags' ref='tags' size='60' placeholder='Comma separated list of tags here' value={this.state.newsItem.tagsStr()} onChange={this.handleChange} />
+          <input className='newsItem' type='checkbox' id='draft' ref='draft' checked={this.state.newsItem.get('draft')} onChange={this.handleChange}>Draft</input>
+          <p>
+          <a href='#' onClick={this.handleSubmit}>Save and continue</a> | <a href='#' onClick={this.handleDelete}>Delete</a>
+          </p>
         </form>
+        <br/>
+        <p><a href='/admin1/newsItems/'>Back to News Items</a></p>
+        </div>
       );
     }
   }); 

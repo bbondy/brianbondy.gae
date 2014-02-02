@@ -2,7 +2,7 @@ from google.appengine.ext import db
 import datetime
 from akismet import Akismet
 import markdown
-from depends import PyRSS2Gen
+from libs import PyRSS2Gen
 import logging
 import layer_cache
 import json
@@ -28,8 +28,18 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
              'body': self.body,
              'posted_date': str(self.posted_date),
              'last_modified_date': str(self.last_modified_date),
-             'draft': self.draft }
+             'draft': self.draft,
+             'tags':  [i.tag.tag for i in self.tags]
+  }
   jsonData = property(getJSONData)
+
+
+  def clearTags(self):
+    #Delete any associated tags so far
+    tag_rels_to_del = NewsItemTag.all() \
+        .filter('news_item', self.key())
+    for tag_rel in tag_rels_to_del:
+      tag_rel.delete()
 
   @staticmethod
   def create():

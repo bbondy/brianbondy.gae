@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% load markup %}
-{% load mytags %}
+{#{% load markup %}#}
+{#{% load mytags %}#}
 
 {% block title %} Administer NewsItems {% endblock %}
 {% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
@@ -12,12 +12,12 @@
 
 <a href='/admin/news_items/add'>Add New</a>
 
-<ul>
-{% for news_item in news_item_list %}
 
-<li><a href='/admin/news_items/{{news_item.id}}'>ID {{news_item.id}}: {{news_item.title}}</a></id>
+<script type="text/javascript">
+  require(['jsx!newsItems'], function() {
+  });
+</script>
 
-{% endfor %}
-</ul>
+<div id="news-items"/>
 
 {% endblock %}
