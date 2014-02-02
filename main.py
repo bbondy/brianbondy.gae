@@ -3,9 +3,9 @@
 #import sys
 #import logging
 
-#import sys
-#sys.path.insert(0, 'depends')
-#sys.path.insert(0, 'reportlab.zip')
+import sys
+sys.path.insert(0, 'libs')
+sys.path.insert(0, 'libs/reportlab.zip')
 
 #import webapp2;
 from flask import Flask
@@ -16,18 +16,18 @@ from app import *
 from urls import *
 
 
-@application.route("/")
-def hello():
-    return "Hello World!"
+#@application.route("/")
+#def hello():
+#    return "Hello World!"
 
-@application.route("/jsontest")
-def jsontest():
-  return jsonify(**{'test1': 'hello1', 'test3': 3, 'test3': [1,2,3], 'x': (1,2,3)})
+#@application.route("/jsontest")
+#def jsontest():
+#  return jsonify(**{'test1': 'hello1', 'test3': 3, 'test3': [1,2,3], 'x': (1,2,3)})
 
-@application.route('/users/', defaults={'name': 'brian'})
-@application.route("/about/<name>/")
-def about(name):
-    return "About" + name + "!"
+#@application.route('/users/', defaults={'name': 'brian'})
+#@application.route("/about/<name>/")
+#def about(name):
+#    return "About" + name + "!"
 
 
 #@app.route('/login', methods=['GET', 'POST'])
@@ -38,10 +38,10 @@ def about(name):
 #        show_the_login_form()
 
 
-@application.route('/hello/')
-@application.route('/hello/<name>')
-def hello2(name=None):
-    return render_template('about.html', name=name)
+#@application.route('/hello/')
+#@application.route('/hello/<name>')
+#def hello2(name=None):
+#    return render_template('about.html', name=name)
 
 # Create a Django application for WSGI.
 #application = webapp2.WSGIApplication(urls.routes, debug=True);
