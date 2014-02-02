@@ -5,6 +5,8 @@ import markdown
 from depends import PyRSS2Gen
 import logging
 import layer_cache
+import json
+import time
 
 class BaseModel(db.Model):
   pass
@@ -20,6 +22,14 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
   draft = db.BooleanProperty(default=True)
   _KEY_PREFIX = 'NewsItem'
   
+  def getJSONData(self):
+    return { 'title': self.title,
+             'body': self.body,
+             'posted_date': str(self.posted_date),
+             'last_modified_date': str(self.last_modified_date),
+             'draft': self.draft }
+  jsonData = property(getJSONData)
+
   @staticmethod
   def create():
     return NewsItem(key_name=NewsItem.get_next_unique_id())
