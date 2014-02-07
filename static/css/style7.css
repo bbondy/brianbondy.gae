@@ -342,6 +342,11 @@ overflow: hidden;
 	padding: 0;
 }
 
+span.blog-social
+{
+  float: right;
+}
+
 #upper-nav {
 	float: right;
 	margin: 18px 1px;
@@ -498,7 +503,25 @@ font-size:0.9em;
 list-style-type:none;
 }
 
-input, textarea  {
+
+input.newsItem, textarea.newsItem {
+  border:1px solid #D1D1D1;
+  padding:5px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+textarea.newsItem {
+  height: 500px;
+  width: 700px;
+}
+label.newsItem { font-weight: bold; float: left; text-align: right; margin-right: 0.5em; display: block }
+input[type=submit] {
+  display: inline;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+input, textarea {
 border:1px solid #D1D1D1;
 padding:5px;
 }
@@ -506,7 +529,7 @@ padding:5px;
 .form { border: 0 solid; }
 fieldset {padding: 0; margin-top: 5px;}
 textarea { height: 100px; width: 50%; }
-label { font-weight: bold; width: 125px; float: left; text-align: right; margin-right: 0.5em; display: block }
+/*label { font-weight: bold; width: 125px; float: left; text-align: right; margin-right: 0.5em; display: block }*/
 .error { color: red; text-align: right; width: 300px; }
 
 .post-tag {
