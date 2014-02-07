@@ -141,18 +141,12 @@ def whats_my_ip():
 def resume_pdf():
   result = StringIO()
   html = render_template('resume_pdf.html')
-
   pdf = pisa.CreatePDF(html.encode('utf8'), result)
   val = result.getvalue();
-
   response = Response(result.getvalue())
   response.headers['Content-Type'] = 'application/pdf'
   response.headers['Content-Disposition'] = 'attachment; filename=BrianRBondy_Resume.pdf'
   return response;
-
-  #return send_file(result, as_attachment=True,
-  #          attachment_filename='index.txt',
-  #          add_etags=False)
 
 #RSS all, or by tag
 @application.route(r'/feeds/rss/')
@@ -160,6 +154,30 @@ def resume_pdf():
 def getRSS(tagged=''):
   rss_xml = NewsItem.get_rss_feed(tagged)
   return Response(rss_xml,  mimetype='application/rss+xml')
+
+
+# Administer the site 
+@application.route(r'/admin1/')
+def admin_page():
+  return render_template('admin/index.html', memcache_stats=memcache.get_stats())
+
+@application.route(r'/admin1/newsItems/')
+def admin_news_items():
+  return render_template('admin/newsItems.html', news_item_list=NewsItem.all().order('-posted_date'));
+
+@application.route(r'/admin1/newsItems/add/')
+@application.route(r'/admin1/newsItems/<news_item_id>/')
+def admin_news_item(news_item_id = 0):
+  return render_template('admin/newsItem.html', news_item_id = news_item_id)
+
+
+#@application.route(r'/admin/news_item_comments/', admin_news_item_comments)
+#@application.route(r'/admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
+
+@application.route(r'/admin1/clear_memcache/')
+def clear_memcache():
+  memcache.flush_all()
+  return redirect(url_for('admin_page'))
 
 @application.route(r'/test/', defaults={'tmpl': 'test.html'} )
 @application.route(r'/contact/', defaults={'tmpl': 'contact.html'})
@@ -205,8 +223,10 @@ def getRSS(tagged=''):
 @application.route(r'/compression/BWT/', defaults={'tmpl': 'BWT.html'})
 @application.route(r'/compression/PPM/', defaults={'tmpl': 'PPM.html'})
 @application.route(r'/math/mathTricks/', defaults={'tmpl': 'math_tricks.html'})
+
 #Web apps
 @application.route(r'/webapp_install/', defaults={'tmpl': 'webapp_install.html'})
+
 #Twitter list links
 @application.route(r'/stackexchange-twitter/cooking/', defaults={'tmpl': 'StackExchangeTwitter/Cooking.html'})
 @application.route(r'/stackexchange-twitter/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/GameDevelopment.html'})
@@ -232,6 +252,7 @@ def getRSS(tagged=''):
 @application.route(r'/stackexchange-twitter/gis/', defaults={'tmpl': 'StackExchangeTwitter/GeographicInformationSystems.html'})
 @application.route(r'/stackexchange-twitter/unix/', defaults={'tmpl': 'StackExchangeTwitter/Unix.html'})
 @application.route(r'/stackexchange-twitter/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/Wordpress.html'})
+
 #LinkedIn list links
 @application.route(r'/stackexchange-linkedin/cooking/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Cooking.html'})
 @application.route(r'/stackexchange-linkedin/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GameDevelopment.html'})
@@ -257,6 +278,7 @@ def getRSS(tagged=''):
 @application.route(r'/stackexchange-linkedin/gis/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-GeographicInformationSystems.html'})
 @application.route(r'/stackexchange-linkedin/unix/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Unix.html'})
 @application.route(r'/stackexchange-linkedin/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/LinkedIn-Wordpress.html'})
+
 #Facebook list links
 @application.route(r'/stackexchange-facebook/cooking/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Cooking.html'})
 @application.route(r'/stackexchange-facebook/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-GameDevelopment.html'})
@@ -282,6 +304,7 @@ def getRSS(tagged=''):
 @application.route(r'/stackexchange-facebook/gis/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-GeographicInformationSystems.html'})
 @application.route(r'/stackexchange-facebook/unix/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Unix.html'})
 @application.route(r'/stackexchange-facebook/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/Facebook-Wordpress.html'})
+
 # Expected age list links
 @application.route(r'/stackexchange/expected-age/cooking/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Cooking.html'})
 @application.route(r'/stackexchange/expected-age/gamedevelopment/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-GameDevelopment.html'})
@@ -309,34 +332,5 @@ def getRSS(tagged=''):
 @application.route(r'/stackexchange/expected-age/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Wordpress.html'})
 @application.route(r'/facebook/pimemorize/', defaults={'tmpl': 'facebook/pimemorize.html'})
 @application.route(r'/maze/', defaults={'tmpl': 'maze.html'})  
-# Administer the site
-#@application.route(r'/admin/tags/', defaults={'tmpl': 'admin/tags.html'})
-#@application.route(r'/admin/news_item_tags/', defaults={'tmpl': 'admin/newsItemTags.html'})
 def directTemplate(tmpl, name=None):
   return render_template(tmpl, name=name);
-  
-@application.route(r'/admin1/')
-def admin_page():
-  return render_template('admin/index.html', memcache_stats=memcache.get_stats())
-
-@application.route(r'/admin1/newsItems/')
-def admin_news_items():
-  return render_template('admin/newsItems.html', news_item_list=NewsItem.all().order('-posted_date'));
-
-
-
-  
-@application.route(r'/admin1/newsItems/add/')
-@application.route(r'/admin1/newsItems/<news_item_id>/')
-def admin_news_item(news_item_id = 0):
-  return render_template('admin/newsItem.html', news_item_id = news_item_id)
-
-
-#@application.route(r'/admin/news_item_comments/', admin_news_item_comments)
-#@application.route(r'/admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
-
-
-@application.route(r'/admin1/clear_memcache/')
-def clear_memcache():
-  memcache.flush_all()
-  return redirect(url_for('admin_page'))
