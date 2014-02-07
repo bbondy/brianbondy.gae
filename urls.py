@@ -154,8 +154,11 @@ def resume_pdf():
   #          add_etags=False)
 
 #RSS all, or by tag
-#@application.route(r'/feeds/rss/', handler=RSSHandler)
-#@application.route(r'/feeds/rss/<tagged:.+>/', handler=RSSHandler)
+@application.route(r'/feeds/rss/')
+@application.route(r'/feeds/rss/<tagged>/')
+def getRSS(tagged=''):
+  rss_xml = NewsItem.get_rss_feed(tagged)
+  return Response(rss_xml,  mimetype='application/rss+xml')
 
 @application.route(r'/test/', defaults={'tmpl': 'test.html'} )
 @application.route(r'/contact/', defaults={'tmpl': 'contact.html'})
