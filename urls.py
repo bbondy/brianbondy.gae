@@ -141,13 +141,14 @@ def whats_my_ip():
 def resume_pdf():
   result = StringIO()
   html = render_template('resume_pdf.html')
-  pdf = pisa.CreatePDF(html, result)
-  val = result.getvalue();
 
+  pdf = pisa.CreatePDF(html.encode('utf8'), result)
+  val = result.getvalue();
 
   response = Response(result.getvalue())
   response.headers['Content-Type'] = 'application/pdf'
   response.headers['Content-Disposition'] = 'attachment; filename=BrianRBondy_Resume.pdf'
+  return response;
 
   #return send_file(result, as_attachment=True,
   #          attachment_filename='index.txt',
@@ -315,7 +316,7 @@ def directTemplate(tmpl, name=None):
   return render_template(tmpl, name=name);
   
 @application.route(r'/admin1/')
-def adminPage():
+def admin_page():
   return render_template('admin/index.html', memcache_stats=memcache.get_stats())
 
 @application.route(r'/admin1/newsItems/')
@@ -333,4 +334,9 @@ def admin_news_item(news_item_id = 0):
 
 #@application.route(r'/admin/news_item_comments/', admin_news_item_comments)
 #@application.route(r'/admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
-#@application.route(r'/admin/clear_memcache/', clear_memcache)
+
+
+@application.route(r'/admin1/clear_memcache/')
+def clear_memcache():
+  memcache.flush_all()
+  return redirect(url_for('admin_page'))
