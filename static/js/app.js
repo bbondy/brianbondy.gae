@@ -12,16 +12,19 @@ require.config({
     'showdown': 'showdown-0.3.1',
     //'showdown': 'http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min',
 
-
     'gravatar': 'gravatar',
-    'newsItem': 'newsItem',
+    'adminNewsItem': 'adminNewsItem',
+    'adminNewsItems': 'adminNewsItems',
+
+    'newsItems': 'newsItems',
 
     'backbone': 'backbone-1.1.0',
     //'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',
 
 
     'models': 'models',
-    'prettify': '/static/prettify/prettify'
+    'prettify': '/static/prettify/prettify',
+    'plusone': 'https://apis.google.com/js/plusone'
   }
 });
 
