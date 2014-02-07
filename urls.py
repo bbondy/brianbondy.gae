@@ -1,31 +1,24 @@
 import logging
 import settings
-from app import *
+import json
+import datetime
+import time
 import handlers
+import os
+
+from app import *
 
 from google.appengine.api import memcache
 
-import os
 from google.appengine.ext.webapp import template
 import layer_cache
 import ho.pisa as pisa
 from cStringIO import StringIO
-import logging
 from blog.models import * 
 
-from flask import Flask
-from flask import render_template
-from flask import request
-from flask import make_response
-from flask import jsonify
-from flask import Response
-from flask import send_file
+from flask import Flask, render_template, request, make_response, jsonify, Response, send_file, redirect, url_for
 from dateutil import parser
 
-import json
-from flask import jsonify
-import datetime
-import time
 
 from google.appengine.ext.db import Key
 dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime)  or isinstance(obj, datetime.date) else None
@@ -37,17 +30,36 @@ def getNewsItem(id):
   news_item = NewsItem.get(key)
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
 
+# JSON API
+@application.route(r'/newsItems/all/', methods=['GET'], defaults={'drafts': None })
 @application.route(r'/newsItems/', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/tagged/<tag>/', methods=['GET'], defaults={'drafts': False})
 @application.route(r'/newsItems/drafts/', methods=['GET'], defaults={'drafts': True})
-def getNewsItems(id=None, drafts=None, page_index=None, count=None, order_by=None):
-  page_index = 0
-  count = 10
-  order_by = ''
-  if drafts:
-    news_items = NewsItem.get_all_drafts(page_index, count, order_by='-last_modified_date')
+@application.route(r'/newsItems/drafts/page/<int:page>', methods=['GET'], defaults={'drafts': True})
+@application.route(r'/newsItems/page/<int:page>', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/tagged/<tag>/page/<int:page>', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/modified/recent/', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
+@application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
+@application.route(r'/newsItems/posted/<int:year>')
+@application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
+def getNewsItems(id=None, drafts=False, page=1, count=5, order_by=None, tag='', recently_modified=False, year=None):
+  if page < 1:
+    page = 1
+  order_by = '-posted_date'
+  if recently_modified:
+    order_by = '-last_modified_date'
+
+  page_index = page - 1
+  if drafts == None:
+    news_items = NewsItem.all().order(order_by)
+  elif drafts:
+    news_items = NewsItem.get_all_drafts(page_index, count, order_by=order_by)
+  elif tag:
+    news_items = NewsItem.get_all_by_tag(tag, page_index, count, order_by)
+  elif year:
+    news_items = NewsItem.get_all_by_year(year, page_index, count, order_by)
   else:
-    #news_items = NewsItem.get_all(page_index, count, order_by='-last_modified_date')
-    news_items = NewsItem.all().order('-posted_date')
+    news_items = NewsItem.get_all(page_index, count, order_by=order_by)
   p = [x.jsonData for x in news_items]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
@@ -72,7 +84,6 @@ def postNewsItems(news_item_id=None):
   news_item.title = request.json['title']
   news_item.body = request.json['body']
   news_item.draft = request.json['draft']
-  logging.info('setting draft to: ' + str(news_item.draft));
   news_item.posted_date = parser.parse(request.json['posted_date'])
   news_item.last_modified_date = parser.parse(request.json['last_modified_date'])
   news_item.put();
@@ -92,34 +103,39 @@ def postNewsItems(news_item_id=None):
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
 
   
+@application.route(r'/blog/')
+def blogRedirect():
+  return redirect(url_for('index'))
 
-#@application.route(r'/', handler=MainHandler)
-#@application.route(r'/page/<page:\d+>', handler=MainHandler)
-#@application.route(r'/blog/page/<page:\d+>', handler=MainHandler)
-#@application.route(r'/blog/posted/<year:\d+>', handler=MainHandler)
-#@application.route(r'/blog/posted/<year:\d+>/page/<page:\d+>', handler=MainHandler)
-#@application.route(r'/blog/modified/(?P<year>\d{4})/', index)
-#@application.route(r'/blog/modified/(?P<year>\d{4})/page/(?P<page>\d+)/', index)
-#@application.route(r'/blog/tagged/(?P<tagged>[^/]*)/', index)
-#@application.route(r'/blog/tagged/(?P<tagged>[^/]*)/page/(?P<page>\d+)/', index)
-#@application.route(r'/blog/posted/recent/', index)
-#@application.route(r'/blog/posted/recent/page/(?P<page>\d+)/', index)
-#@application.route(r'/blog/modified/recent/', index, {'recently_modified' : 'True'})
-#@application.route(r'/blog/modified/recent/page/(?P<page>\d+)/', index, {'recently_modified' : 'True'})
-#@application.route(r'/blog/id/(?P<wanted_id>\d+)/', index)    
-#@application.route(r'/drafts/', index, {'drafts':'True'})
-#@application.route(r'/blog/posted/(\d{4})/drafts/', index, {'drafts':'True'})
-#@application.route(r'/blog/modified/(\d{4})/drafts/', index, {'drafts':'True'})
-#@application.route(r'/blog/posted/recent/drafts/', index, {'drafts':'True'})
-#@application.route(r'/blog/modified/recent/drafts/', index, {'recently_modified' : 'True', 'drafts':'True'})
+@application.route(r'/')
+@application.route(r'/blog/id/<int:news_item_id>/')    
+@application.route(r'/blog/id/<int:news_item_id>/<title>/')    
+@application.route(r'/page/<int:page>/')
+@application.route(r'/drafts/', defaults={ 'drafts': True })
+@application.route(r'/drafts/page/<int:page>/', defaults={ 'drafts': True })
+@application.route(r'/blog/tagged/<tag>/')
+@application.route(r'/blog/tagged/<tag>/page/<int:page>/')
+@application.route(r'/blog/posted/recent/')
+@application.route(r'/blog/posted/recent/page/<int:page>/')
+@application.route(r'/blog/modified/recent/', defaults={'recently_modified' : True})
+@application.route(r'/blog/modified/recent/page/<int:page>/', defaults={'recently_modified' : True})
+@application.route(r'/blog/posted/<int:year>/')
+@application.route(r'/blog/posted/<int:year>/page/<int:page>/')
+@application.route(r'/blog/modified/<int:year>/', defaults={'recently_modified' : True})
+@application.route(r'/blog/modified/<int:year>/page/<page>/', defaults={'recently_modified' : True})
+def index(news_item_id=0, title=None, page=1, drafts=False, tag='', recently_modified=False, year=0):
+  if page < 1:
+    page = 1
+  return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year);
+  
 
 #Blog comments TODO: rewrite this
 #@application.route(r'^blog/comments/id/(?P<wanted_id>\d+)/', post_comment)    
 #@application.route(r'^comments/', include('django.contrib.comments.urls'))
 
-#@application.route(r'/other/whatsMyIP/')
-#def whats_my_ip():
-#  return render_template('whats_my_ip.html', client_IP=request.remote_addr)
+@application.route(r'/other/whatsMyIP/')
+def whats_my_ip():
+  return render_template('whats_my_ip.html', client_IP=request.remote_addr)
 
 @application.route(r'/resume/pdf/')
 def resume_pdf():
@@ -311,92 +327,7 @@ def admin_news_items():
 def admin_news_item(news_item_id = 0):
   return render_template('admin/newsItem.html', news_item_id = news_item_id)
 
-"""
-  d = {}
-  if news_item_id:
-    key = Key.from_path('NewsItem', str(news_item_id))
-    news_item = NewsItem.get(key)
-    news_item_tags = [i.tag.tag for i in news_item.tags]
-    news_item_tags = ' '.join(news_item_tags)
-    d['submit_url'] = '/admin/news_items/%s/' % news_item_id 
-    d['news_item_id'] = news_item_id
-    is_adding = False
-  else:
-    is_adding = True
-    d['submit_url'] = '/admin/news_items/add/'
 
-  #We want to retrieve the page
-  if request.method == 'GET':
-    if news_item_id:
-      d['news_item'] = news_item
-      d['form'] = NewsItemForm(instance=news_item)
-      d['news_item_tags'] = news_item_tags
-    else:
-      d['form'] = NewsItemForm()
-
-    return render_template('admin/newsItem.html', **d);
-  #We are posting data
-  else:
-    if request.POST['submit'] == 'Delete':
-      key = Key.from_path('NewsItem', str(news_item_id))
-      news_item = NewsItem.get(key)
-      news_item.delete()
-      return redirect(url_for('admin_news_items'))
-
-    if news_item_id:
-      key = Key.from_path('NewsItem', str(news_item_id))
-      news_item = NewsItem.get(key)
-    else:
-      news_item = NewsItem.create()
-
-    form = NewsItemForm(request.POST, instance=news_item)
-    d['form'] = form
-    #if the form is valid, save the model to the datastore
-    if form.is_valid():
-      news_item = form.save(commit=False)
-      news_item.put()
-      d['submit_url'] = '/admin/news_items/%s/' % news_item.id()
-
-      #Delete any associated tags so far
-      tag_rels_to_del = NewsItemTag.all() \
-          .filter('news_item', news_item.key())
-
-      for tag_rel in tag_rels_to_del:
-        tag_rel.delete()
-
-      #Add the new tags
-      news_item_tags = request.POST['tags']
-      d['news_item_tags'] = news_item_tags
-      for tag_name in news_item_tags.split(' '):
-        if tag_name == '':
-          continue  
-
-        tag = Tag(key_name=tag_name, tag=tag_name)
-        tag.put()
-        news_item_tag = NewsItemTag()
-        news_item_tag.tag = tag.key()
-        news_item_tag.news_item = news_item.key()
-        news_item_tag.put()
-
-      if request.POST['submit'] == 'Save Done':
-        return redirect(url_for('admin_news_items'))
-      elif is_adding:
-        logging.error('TODO: pass in news item id here')
-        return redirect(url_for('admin_news_items')) #TODO pass in / news_item.id()
-      else:
-        return redirect(url_for('admin_news_item'))
-
-    #Redisplay the form
-    d['news_item'] = news_item
-    d['news_item_tags'] = news_item_tags
-    d['news_item_id'] = news_item_id
-    d['form'] = form
-    return render_template('admin/newsItem.html', **d);
-"""
-
-
-
-#@application.route(r'/admin/news_items/(?P<news_item_id>\d+)/', admin_news_item)
 #@application.route(r'/admin/news_item_comments/', admin_news_item_comments)
 #@application.route(r'/admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
 #@application.route(r'/admin/clear_memcache/', clear_memcache)
