@@ -90,6 +90,7 @@ def postNewsItems(news_item_id=None):
 
   # Loop through the tags to add them
   for tag_name in request.json['tags']:
+    tag_name = tag_name.strip()
     if tag_name == '':
       continue  
 
@@ -126,7 +127,9 @@ def blogRedirect():
 def index(news_item_id=0, title=None, page=1, drafts=False, tag='', recently_modified=False, year=0):
   if page < 1:
     page = 1
-  return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year);
+  archive_list = NewsItem.get_year_list()
+  tag_list = NewsItem.get_tag_list()
+  return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year, archive_list=archive_list, tag_list=tag_list);
   
 
 #Blog comments TODO: rewrite this
