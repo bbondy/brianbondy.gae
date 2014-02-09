@@ -22,10 +22,32 @@ define(['backbone'], function(_) {
     model: NewsItem
   });
 
+  var Comment = Backbone.Model.extend({
+    urlRoot: '/comments/',
+    initialize: function() {
+    },
+    defaults: {
+      name: '',
+      homepage: '',
+      email: '',
+      body: '',
+      posted_date: new Date(),
+    },
+  });
+
+  var Comments = Backbone.Collection.extend({
+    url: '/comments/',
+    model: Comment
+  });
+
   return {
     NewsItem: NewsItem,
-    NewsItems: NewsItems
+    NewsItems: NewsItems,
+    Comment: Comment,
+    Comments: Comments
   };
 });
+
+
 
 
