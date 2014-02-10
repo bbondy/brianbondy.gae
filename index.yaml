@@ -13,5 +13,17 @@ indexes:
 - kind: NewsItem
   properties:
   - name: draft
+  - name: last_modified_date
+    direction: desc
+
+- kind: NewsItem
+  properties:
+  - name: draft
   - name: posted_date
     direction: desc
+
+- kind: NewsItemComment
+  properties:
+  - name: is_public
+  - name: news_item
+  - name: posted_date
