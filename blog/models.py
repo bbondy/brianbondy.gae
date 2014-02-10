@@ -1,12 +1,9 @@
 from google.appengine.ext import db
 import datetime
-from akismet import Akismet
 import markdown
 from libs import PyRSS2Gen
 import logging
 #import layer_cache
-import json
-import time
 
 class BaseModel(db.Model):
   pass
@@ -221,14 +218,27 @@ class NewsItemComment(BaseModel):
   def id(self):
     return self.key().id() or self.key().name()
 
+  def getAllJSONData(self):
+    return { 'id': self.id(),
+             'name': self.name,
+             'homepage': self.homepage,
+             'email': self.email,
+             'body': self.body,
+             'posted_date': str(self.posted_date),
+             'news_item_id': str(self.news_item.id()),
+             'is_public': self.is_public,
+             'poster_ip': self.poster_ip
+           }
+  allJSONData = property(getAllJSONData)
+
   def getJSONData(self):
     return { 'id': self.id(),
              'name': self.name,
              'homepage': self.homepage,
-             #'email': self.email, <- Private info,
              'body': self.body,
              'posted_date': str(self.posted_date),
-             #'posted_ip': self.posted_ip, <- Private info
+             'news_item_id': str(self.news_item.id()),
+             'is_public': self.is_public,
            }
   jsonData = property(getJSONData)
 
@@ -236,3 +246,8 @@ class NewsItemComment(BaseModel):
   def create():
     return NewsItemComment()
 
+  @staticmethod
+#  @layer_cache.cache_with_key_fxn(lambda id: "%s" % id)
+  def get_by_id(id):
+    key = db.Key.from_path('NewsItemComment', id)
+    return NewsItemComment.get(key)

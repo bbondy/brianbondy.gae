@@ -4,7 +4,7 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'plusone', comments], function(models, React, Showdown, plusOne, commentCtrls) {
+define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(models, React, Showdown, plusOne, commentCtrls) {
 
   var converter = new Showdown.converter();
   var CommentsView = commentCtrls.CommentsView;

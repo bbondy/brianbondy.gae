@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 
-{% load markup %}
-{% load mytags %}
-
 {% block title %} Administer NewsItemComments {% endblock %}
 {% block pagetitle %}Brian R. Bondy - {{pagetitle}}{% endblock %}
 {% block subtitle %} I hope you are Brian R. Bondy! {% endblock %}
@@ -10,35 +7,12 @@
 
 {% block main_content %}
 
-<ul>
-{% for news_item_comment in news_item_comments_list %}
+<script type="text/javascript">
+  require(['jsx!adminNewsItemComments'], function() {
+  });
+</script>
 
-{% if news_item_comment.is_public %}
- Public Comment 
-{% else %}
- NOT Public Comment 
-{% endif %}
-
-ID: {{news_item_comment.id}}<br>
-<form action="/admin/news_item_comments/{{news_item_comment.id}}/" method="POST">
-<p>
-Posted By: <a href='{{news_item_comment.homepage}}'>{{news_item_comment.name}} ({{news_item_comment.poster_ip}})</a>
-<br>
-body: {{news_item_comment.body}}
-<br>
-<input type="submit" name='submit' value="Delete" />
-<input type="submit" name='submit' value="Report as SPAM" />
-<input type="submit" name='submit' value="Report as Good" />
-<input type="submit" name='submit' value="Make Public" />
-</p>
-
-</form>
-
-<hr>
-
-
-{% endfor %}
-</ul>
+<div id='comments'/>
 
 {% endblock %}
 

@@ -15,6 +15,8 @@ import layer_cache
 import ho.pisa as pisa
 from cStringIO import StringIO
 from blog.models import * 
+from spamController import *
+from emailController import *
 
 from flask import Flask, render_template, request, make_response, jsonify, Response, send_file, redirect, url_for
 from dateutil import parser
@@ -134,19 +136,45 @@ def index(news_item_id=0, title=None, page=1, drafts=False, tag='', recently_mod
 
 #Blog comments
 @application.route(r'/newsItems/<int:news_item_id>/comments')
-def get_comments():
-  key = Key.from_path('NewsItem', str(news_item_id))
-  news_item = NewsItem.get(key)
-  comments = news_item.sorted_comments
+def get_comments(news_item_id):
+  news_item = NewsItem.get_by_id(news_item_id)
+  comments = news_item.sorted_comments()
+  logging.info(len(comments))
+  logging.info(news_item._linkback);
   p = [x.jsonData for x in comments]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
 
+@application.route(r'/comments/<int:comment_id>', methods=['PUT'])
 @application.route(r'/newsItems/<int:news_item_id>/comments', methods=['POST'])
-def post_comment(news_item_id):
-  comment = NewsItemComment.create()
-  news_item_key = Key.from_path('NewsItem', news_item_id)
-  comment.news_item = news_item_key
+def post_comment(news_item_id=None, comment_id=None):
+  if comment_id:
+    comment = NewsItemComment.get_by_id(comment_id)
+    if ('is_public' in request.json):
+      comment.is_public = request.json['is_public'];
+    else:
+      comment.is_public = False
+
+    # Should we report as good?
+    if ('report_as_good' in request.json):
+      if report_as_good(comment, request):
+        logging.info('reported as good!')
+      else:
+        logging.info('FAILED TO reported as good!')
+
+    # Should we report as spam?
+    if ('report_as_spam' in request.json):
+      if report_as_spam(comment, request):
+        logging.info('reported as spam!')
+      else:
+        logging.info('FAILED TO reported as spam!')
+
+  else:
+    comment = NewsItemComment.create()
+    comment.is_plublic = False
+    if news_item_id:
+      news_item = NewsItem.get_by_id(news_item_id)
+      comment.news_item = news_item
 
   # TODO: Most of this code can go in the model with a fromJSONData function
   comment.name = request.json['name']
@@ -157,15 +185,23 @@ def post_comment(news_item_id):
   comment.poster_ip = request.remote_addr
 
   comment.put()
+
+  send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
+
   return Response(json.dumps(comment.jsonData, default=dthandler),  mimetype='application/json')
 
+
+@application.route(r'/comments/', methods=['GET'])
+def get_all_comments():
+  news_item_comments = NewsItemComment.all()
+  p = [x.allJSONData for x in news_item_comments]
+  return Response(json.dumps(p),  mimetype='application/json')
+
 @application.route(r'/comments/<int:comment_id>', methods=['DELETE'])
-def delete_comment(news_item_id, comment_id):
-  comment = NewsItemComment.get_by_id(int(news_item_comment_id))
+def delete_comment(comment_id):
+  comment = NewsItemComment.get_by_id(int(comment_id))
   comment.delete();
   return Response(json.dumps({}),  mimetype='application/json')
-
-
 
 @application.route(r'/other/whatsMyIP/')
 def whats_my_ip():
@@ -205,8 +241,9 @@ def admin_news_item(news_item_id = 0):
   return render_template('admin/newsItem.html', news_item_id = news_item_id)
 
 
-#@application.route(r'/admin/news_item_comments/', admin_news_item_comments)
-#@application.route(r'/admin/news_item_comments/(?P<news_item_comment_id>\d+)/', admin_news_item_comment)
+@application.route(r'/admin1/news_item_comments/')
+def admin_news_item_comments():
+  return render_template('admin/newsItemComments.html')
 
 @application.route(r'/admin1/clear_memcache/')
 def clear_memcache():
