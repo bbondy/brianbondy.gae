@@ -3,7 +3,6 @@ import settings
 import json
 import datetime
 import time
-import handlers
 import os
 
 from app import *
