@@ -39,4 +39,5 @@ nosetests.xml
 *.DS_Store
 
 # secrets
+secrets.py
 settings.py
