@@ -36,7 +36,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
     },
 
     handleSubmit: function(event) {
-    event.preventDefault();
+      event.preventDefault();
       var title = this.refs.title.getDOMNode().value.trim();
       var body = this.refs.body.getDOMNode().value.trim();
       var tagsStr = this.refs.tags.getDOMNode().value.trim();

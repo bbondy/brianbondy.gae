@@ -25,7 +25,7 @@ dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime)  o
 
 
 @application.route(r'/newsItems/<int:id>', methods=['GET'])
-def getNewsItem(id):
+def get_news_item(id):
   key = Key.from_path('NewsItem', str(id))
   news_item = NewsItem.get(key)
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
@@ -42,7 +42,7 @@ def getNewsItem(id):
 @application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
 @application.route(r'/newsItems/posted/<int:year>')
 @application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
-def getNewsItems(id=None, drafts=False, page=1, count=5, order_by=None, tag='', recently_modified=False, year=None):
+def get_news_items(id=None, drafts=False, page=1, count=5, order_by=None, tag='', recently_modified=False, year=None):
   if page < 1:
     page = 1
   order_by = '-posted_date'
@@ -64,7 +64,7 @@ def getNewsItems(id=None, drafts=False, page=1, count=5, order_by=None, tag='', 
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
 @application.route(r'/newsItems/<int:news_item_id>', methods=['DELETE'])
-def deleteNewsItems(news_item_id):
+def delete_news_items(news_item_id):
   key = Key.from_path('NewsItem', str(news_item_id))
   news_item = NewsItem.get(key)
   news_item.delete()
@@ -72,7 +72,7 @@ def deleteNewsItems(news_item_id):
 
 @application.route(r'/newsItems/<int:news_item_id>', methods=['PUT'])
 @application.route(r'/newsItems/', methods=['POST'])
-def postNewsItems(news_item_id=None):
+def post_news_item(news_item_id=None):
   if news_item_id:
     key = Key.from_path('NewsItem', str(news_item_id))
     news_item = NewsItem.get(key)
@@ -105,7 +105,7 @@ def postNewsItems(news_item_id=None):
 
   
 @application.route(r'/blog/')
-def blogRedirect():
+def blog_redirect():
   return redirect(url_for('index'))
 
 @application.route(r'/')
@@ -132,9 +132,40 @@ def index(news_item_id=0, title=None, page=1, drafts=False, tag='', recently_mod
   return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year, archive_list=archive_list, tag_list=tag_list);
   
 
-#Blog comments TODO: rewrite this
-#@application.route(r'^blog/comments/id/(?P<wanted_id>\d+)/', post_comment)    
-#@application.route(r'^comments/', include('django.contrib.comments.urls'))
+#Blog comments
+@application.route(r'/newsItems/<int:news_item_id>/comments')
+def get_comments():
+  key = Key.from_path('NewsItem', str(news_item_id))
+  news_item = NewsItem.get(key)
+  comments = news_item.sorted_comments
+  p = [x.jsonData for x in comments]
+  return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
+
+
+@application.route(r'/newsItems/<int:news_item_id>/comments', methods=['POST'])
+def post_comment(news_item_id):
+  comment = NewsItemComment.create()
+  news_item_key = Key.from_path('NewsItem', news_item_id)
+  comment.news_item = news_item_key
+
+  # TODO: Most of this code can go in the model with a fromJSONData function
+  comment.name = request.json['name']
+  comment.email = request.json['email']
+  comment.body = request.json['body']
+  comment.homepage = request.json['homepage']
+  comment.posted_date = datetime.datetime.now()
+  comment.poster_ip = request.remote_addr
+
+  comment.put()
+  return Response(json.dumps(comment.jsonData, default=dthandler),  mimetype='application/json')
+
+@application.route(r'/comments/<int:comment_id>', methods=['DELETE'])
+def delete_comment(news_item_id, comment_id):
+  comment = NewsItemComment.get_by_id(int(news_item_comment_id))
+  comment.delete();
+  return Response(json.dumps({}),  mimetype='application/json')
+
+
 
 @application.route(r'/other/whatsMyIP/')
 def whats_my_ip():
@@ -154,7 +185,7 @@ def resume_pdf():
 #RSS all, or by tag
 @application.route(r'/feeds/rss/')
 @application.route(r'/feeds/rss/<tagged>/')
-def getRSS(tagged=''):
+def get_rss(tagged=''):
   rss_xml = NewsItem.get_rss_feed(tagged)
   return Response(rss_xml,  mimetype='application/rss+xml')
 
@@ -335,5 +366,5 @@ def clear_memcache():
 @application.route(r'/stackexchange/expected-age/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Wordpress.html'})
 @application.route(r'/facebook/pimemorize/', defaults={'tmpl': 'facebook/pimemorize.html'})
 @application.route(r'/maze/', defaults={'tmpl': 'maze.html'})  
-def directTemplate(tmpl, name=None):
+def direct_template(tmpl, name=None):
   return render_template(tmpl, name=name);

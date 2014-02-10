@@ -4,7 +4,7 @@ from akismet import Akismet
 import markdown
 from libs import PyRSS2Gen
 import logging
-import layer_cache
+#import layer_cache
 import json
 import time
 
@@ -66,7 +66,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return "/blog/id/" + str(self.id)
     
   @staticmethod
-  @layer_cache.cache_with_key_fxn(lambda id: "%s" % id)
+#  @layer_cache.cache_with_key_fxn(lambda id: "%s" % id)
   def get_by_id(id):
     key = db.Key.from_path('NewsItem', str(id))
     news_item = NewsItem.all() \
@@ -76,7 +76,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return news_item
   
   @staticmethod
-  @layer_cache.cache_with_key_fxn(lambda year, page_index, count, order_by: "%s_%s_%s_%s" % (year, page_index, count, order_by))
+#  @layer_cache.cache_with_key_fxn(lambda year, page_index, count, order_by: "%s_%s_%s_%s" % (year, page_index, count, order_by))
   def get_all_by_year(year, page_index, count, order_by):
     news_items = NewsItem.all()  \
       .filter('posted_date >=', datetime.datetime(year,1,1,0,0)) \
@@ -89,7 +89,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return news_items
 
   @staticmethod
-  @layer_cache.cache_with_key_fxn(lambda tag, page_index, count, order_by: "%s_%s_%s_%s" % (tag, page_index, count, order_by))
+#  @layer_cache.cache_with_key_fxn(lambda tag, page_index, count, order_by: "%s_%s_%s_%s" % (tag, page_index, count, order_by))
   def get_all_by_tag(tag, page_index, count, order_by):
     tags = Tag.all().filter('tag', tag).order('tag')
     
@@ -113,7 +113,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
       
 
   @staticmethod
-  @layer_cache.cache_with_key_fxn(lambda page_index, count, order_by: ("%s_%s_%s" % (page_index, count, order_by)))
+#  @layer_cache.cache_with_key_fxn(lambda page_index, count, order_by: ("%s_%s_%s" % (page_index, count, order_by)))
   def get_all(page_index, count, order_by):
     news_items = NewsItem.all() \
       .filter('draft', False) \
@@ -125,7 +125,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return news_items
   
   @staticmethod
-  @layer_cache.cache()
+#  @layer_cache.cache()
   def get_tag_list():
     tag_list = [(tag.tag, tag.news_items.count()) for tag in Tag.all()]
     return tag_list
@@ -155,7 +155,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return self._markdown_body
   
   @staticmethod
-  @layer_cache.cache()
+#  @layer_cache.cache()
   def get_year_list():
     if NewsItem.all().count() != 0:
       oldest_year = NewsItem.all().order('posted_date') \
@@ -169,7 +169,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
     return year_list
     
   @staticmethod
-  @layer_cache.cache_with_key_fxn(lambda tagged='': ("%s" % (tagged)))
+#  @layer_cache.cache_with_key_fxn(lambda tagged='': ("%s" % (tagged)))
   def get_rss_feed(tagged=''):
     rss = PyRSS2Gen.RSS2(
       title = "Brian R. Bondy's Feed",
@@ -220,4 +220,19 @@ class NewsItemComment(BaseModel):
 
   def id(self):
     return self.key().id() or self.key().name()
+
+  def getJSONData(self):
+    return { 'id': self.id(),
+             'name': self.name,
+             'homepage': self.homepage,
+             #'email': self.email, <- Private info,
+             'body': self.body,
+             'posted_date': str(self.posted_date),
+             #'posted_ip': self.posted_ip, <- Private info
+           }
+  jsonData = property(getJSONData)
+
+  @staticmethod
+  def create():
+    return NewsItemComment()
 

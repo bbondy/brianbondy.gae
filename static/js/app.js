@@ -17,6 +17,8 @@ require.config({
     'adminNewsItems': 'adminNewsItems',
 
     'newsItems': 'newsItems',
+    'comments': 'comments',
+    'gravatar': 'gravatar',
 
     'backbone': 'backbone-1.1.0',
     //'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',

@@ -4,10 +4,16 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'plusone'], function(models, React, Showdown) {
+define(['models', 'react', 'showdown', 'plusone', comments], function(models, React, Showdown, plusOne, commentCtrls) {
 
   var converter = new Showdown.converter();
+  var CommentsView = commentCtrls.CommentsView;
+  var CommentForm = commentCtrls.CommentForm;
 
+
+  /**
+   * Represents a view for the tag items
+   */
   var TagsView = React.createClass({
     render: function() {
       var nodes = this.props.tags.map(function (tag) {
@@ -162,9 +168,10 @@ define(['models', 'react', 'showdown', 'plusone'], function(models, React, Showd
                 </a>
               </span>
 
-              <TagsView tags={n.get('tags')}/>
             </p>
           </div>
+              <TagsView tags={n.get('tags')}/>
+          <CommentForm newsItemId={n.get('id')}/>
 
 
         </div>
