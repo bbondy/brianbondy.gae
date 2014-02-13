@@ -4,7 +4,7 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'gravatar'], function(models, React, Showdown, Gravatar) {
+define(['models', 'react', 'showdown', 'jsx!gravatar', 'jquery'], function(models, React, Showdown, GravatarIcon) {
 
   var converter = new Showdown.converter();
 
@@ -13,18 +13,91 @@ define(['models', 'react', 'showdown', 'gravatar'], function(models, React, Show
    * Represents a view for all of the comments for a specific blog post
    */
   var CommentsView = React.createClass({
+    getInitialState: function() {
+      var comments = new models.Comments();
+      comments.url = '/newsItems/' + this.props.newsItemId + '/comments';
+      return { comments: comments };
+    },
+
     loadFromServer: function() {
+       var comments = this.state.comments;
+       comments.fetch().done(function() {
+         this.setState({ comments: comments });
+       }.bind(this));
      },
 
     componentWillMount: function() {
       this.loadFromServer();
       setInterval(this.loadFromServer, 60 * 1000);
     },
+    
+    handleDelete: function(comment) {
+      var comments = this.state.comments;
+      comments.remove(comment);
+      comment.destroy();
+      this.setState({ comments: comments });
+    },
+
+    handleReportAsSpam: function(comment) {
+      var comments = this.state.comments;
+      this.setState();
+      comment.set('is_public', false);
+      comment.set('report_as_spam', true);
+      comment.save();
+      comment.unset('report_as_spam');
+    },
+
+    handleReportAsGood: function(comment) {
+      var comments = this.state.comments;
+      this.setState();
+      comment.set('is_public', true);
+      comment.set('report_as_good', true);
+      comment.save();
+      comment.unset('report_as_good');
+    },
 
     render: function() {
-      return <div/>
+      var self = this;
+      var nodes = this.state.comments.map(function (comment) {
+        return <CommentView
+                 comment={comment}
+                 onDelete={self.handleDelete}
+                 onReportAsGood={self.handleReportAsGood}
+                 onReportAsSpam={self.handleReportAsSpam}
+               />;
+      });
+      return (
+        <ul className='comments-list'>
+          {nodes}
+        </ul>
+      );
     }
   });
+
+  
+  /**
+   * Represents an individual comment 
+   */
+  var CommentView = React.createClass({
+    render: function() {
+      // This text has HTML manually stripped before it is used
+      var comment = this.props.comment;
+      var title = comment.get('title');
+      var url = comment.get('id');
+
+      return (
+        <li className='comment-item'>
+            <GravatarIcon emailHash={this.props.comment.get('emailHash')} size='60' url={comment.get('homepage')} />
+            <a rel="external nofollow" href={comment.get('homepage')}>{comment.get('name')}</a> on 
+            <small class="comment-date">Monday, November 18, 2013 (09:11:02)</small> says:
+            <p className='comment-text'>{comment.get('body')}</p>
+        </li>
+      );
+    }
+  });
+
+
+
 
   /**
    * Represents a comment form to be filled out to post a comment on a blog entry
@@ -57,19 +130,22 @@ define(['models', 'react', 'showdown', 'gravatar'], function(models, React, Show
         this.refs.email.getDOMNode().value = '';
         this.refs.homepage.getDOMNode().value = '';
         this.refs.body.getDOMNode().value = '';
-        alert('Comment submitted!');
+        alert('Comment submitted! It will be manually reviewed and approved soon!');
       }.bind(this));
+      return false;
+    },
+    toggleAddComment: function() {
+      $('#addComment' + this.props.newsItemId).toggle()
       return false;
     },
     render: function() {
         return  <div>
 
           <div className='comment-controls'>
-            <a href="Javascript:toggleAddComment(156);" className="comments-link">Add a new comment</a> | 
-            <a href="Javascript:toggleComments(156);" classNmae="comments-link">2 comment(s)</a>
+            <a href='#' onClick={this.toggleAddComment} className="comments-link">Add a new comment</a>
           </div>
 
-          <form className='comments' onSubmit={this.handleSubmit} method='POST'>
+          <form className='comments' onSubmit={this.handleSubmit} id={'addComment' + this.props.newsItemId} method='POST'>
                  <label htmlFor='name'>Name:</label>
                  <input name='name' id='name' ref='name' placeholder='Your name' required='' type='text'/><br/>
                  <label htmlFor='email'>Email:</label>
@@ -79,7 +155,6 @@ define(['models', 'react', 'showdown', 'gravatar'], function(models, React, Show
                  <label htmlFor='body'>Comment:</label>
                  <textarea type='text' name='body' id='body' ref='body' placeholder='Enter your comment here, markdown accepted' required=''></textarea><br/>
                  <input value='Submit' type='submit'/>
-                 <p>Comments will be manually verified after automated filtering and will show up within 24h</p>
           </form>
           </div>
 

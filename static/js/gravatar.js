@@ -14,13 +14,13 @@ define(['react'], function(React) {
       if (this.props.url) {
         return (
           <div>
-            <a href={this.props.url} target='_blank'><img src={url} className='gravatar-image' /></a>
+            <a href={this.props.url} target='_blank'><img src={url} className='gravatar' /></a>
           </div>
         );
       } else {
         return (
           <div>
-            <img src={url} className='gravatar-image' />
+            <img src={url} className='gravatar' />
           </div>
         );
       }

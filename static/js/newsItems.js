@@ -172,6 +172,7 @@ define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(mode
           </div>
               <TagsView tags={n.get('tags')}/>
           <CommentForm newsItemId={n.get('id')}/>
+          <CommentsView newsItemId={n.get('id')}/>
 
 
         </div>

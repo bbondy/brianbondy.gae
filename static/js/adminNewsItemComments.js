@@ -8,7 +8,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
 
 
   /**
-   * Represents a list of news items
+   * Represents a list of comments
    */
   var CommentsView = React.createClass({
     getInitialState: function() {

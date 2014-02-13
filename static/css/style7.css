@@ -497,6 +497,20 @@ color:#888888;
 padding:0 3px 2px;
 }
 
+.comments-list {
+margin-left:0;
+margin-bottom:100px;
+margin-top:0;
+padding:0;
+list-style-type:none;
+}
+
+.comment-item {
+  padding-top: 20px;
+  margin-bottom: 20px;
+  border-top:1px dotted #AAAAAA;
+}
+
 
 .comment-date
 {

@@ -43,7 +43,7 @@ def get_news_item(id):
 @application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
 @application.route(r'/newsItems/posted/<int:year>')
 @application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
-def get_news_items(id=None, drafts=False, page=1, count=5, order_by=None, tag='', recently_modified=False, year=None):
+def get_news_items(id=None, drafts=False, page=1, count=2, order_by=None, tag='', recently_modified=False, year=None):
   if page < 1:
     page = 1
   order_by = '-posted_date'

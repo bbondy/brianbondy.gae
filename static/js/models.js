@@ -30,6 +30,7 @@ define(['backbone'], function(_) {
       name: '',
       homepage: '',
       email: '',
+      emailHash: '',
       body: '',
       posted_date: new Date(),
     },
