@@ -3,6 +3,7 @@ import datetime
 import markdown
 from libs import PyRSS2Gen
 import logging
+import md5
 #import layer_cache
 
 class BaseModel(db.Model):
@@ -218,11 +219,17 @@ class NewsItemComment(BaseModel):
   def id(self):
     return self.key().id() or self.key().name()
 
+  def getEmailHash(self):
+    m = md5.new()
+    m.update(self.email.strip().lower())
+    return m.hexdigest()
+
   def getAllJSONData(self):
     return { 'id': self.id(),
              'name': self.name,
              'homepage': self.homepage,
              'email': self.email,
+             'emailHash': self.getEmailHash(),
              'body': self.body,
              'posted_date': str(self.posted_date),
              'news_item_id': str(self.news_item.id()),
@@ -235,6 +242,7 @@ class NewsItemComment(BaseModel):
     return { 'id': self.id(),
              'name': self.name,
              'homepage': self.homepage,
+             'emailHash': self.getEmailHash(),
              'body': self.body,
              'posted_date': str(self.posted_date),
              'news_item_id': str(self.news_item.id()),
