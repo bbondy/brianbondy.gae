@@ -1,113 +1,9 @@
-import logging
-import settings
-import json
-import datetime
-import time
-import os
-
 from app import *
+import views, admin, api
+from flask import redirect, url_for
 
-from google.appengine.api import memcache
-
-from google.appengine.ext.webapp import template
-import layer_cache
-import ho.pisa as pisa
-from cStringIO import StringIO
-from blog.models import * 
-from spamController import *
-from emailController import *
-
-from flask import Flask, render_template, request, make_response, jsonify, Response, send_file, redirect, url_for
-from dateutil import parser
-
-
-from google.appengine.ext.db import Key
-dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime)  or isinstance(obj, datetime.date) else None
-
-
-@application.route(r'/newsItems/<int:id>', methods=['GET'])
-def get_news_item(id):
-  key = Key.from_path('NewsItem', str(id))
-  news_item = NewsItem.get(key)
-  return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
-
-# JSON API
-@application.route(r'/newsItems/all/', methods=['GET'], defaults={'drafts': None })
-@application.route(r'/newsItems/', methods=['GET'], defaults={'drafts': False})
-@application.route(r'/newsItems/tagged/<tag>/', methods=['GET'], defaults={'drafts': False})
-@application.route(r'/newsItems/drafts/', methods=['GET'], defaults={'drafts': True})
-@application.route(r'/newsItems/drafts/page/<int:page>', methods=['GET'], defaults={'drafts': True})
-@application.route(r'/newsItems/page/<int:page>', methods=['GET'], defaults={'drafts': False})
-@application.route(r'/newsItems/tagged/<tag>/page/<int:page>', methods=['GET'], defaults={'drafts': False})
-@application.route(r'/newsItems/modified/recent/', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
-@application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
-@application.route(r'/newsItems/posted/<int:year>')
-@application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
-def get_news_items(id=None, drafts=False, page=1, count=2, order_by=None, tag='', recently_modified=False, year=None):
-  if page < 1:
-    page = 1
-  order_by = '-posted_date'
-  if recently_modified:
-    order_by = '-last_modified_date'
-
-  page_index = page - 1
-  if drafts == None:
-    news_items = NewsItem.all().order(order_by)
-  elif drafts:
-    news_items = NewsItem.get_all_drafts(page_index, count, order_by=order_by)
-  elif tag:
-    news_items = NewsItem.get_all_by_tag(tag, page_index, count, order_by)
-  elif year:
-    news_items = NewsItem.get_all_by_year(year, page_index, count, order_by)
-  else:
-    news_items = NewsItem.get_all(page_index, count, order_by=order_by)
-  p = [x.jsonData for x in news_items]
-  return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
-
-@application.route(r'/newsItems/<int:news_item_id>', methods=['DELETE'])
-def delete_news_items(news_item_id):
-  key = Key.from_path('NewsItem', str(news_item_id))
-  news_item = NewsItem.get(key)
-  news_item.delete()
-  return Response(json.dumps({}),  mimetype='application/json')
-
-@application.route(r'/newsItems/<int:news_item_id>', methods=['PUT'])
-@application.route(r'/newsItems/', methods=['POST'])
-def post_news_item(news_item_id=None):
-  if news_item_id:
-    key = Key.from_path('NewsItem', str(news_item_id))
-    news_item = NewsItem.get(key)
-    news_item.clearTags();
-  else:
-    news_item = NewsItem.create()
-
-  # TODO: Most of this code can go in the model with a fromJSONData function
-  news_item.title = request.json['title']
-  news_item.body = request.json['body']
-  news_item.draft = request.json['draft']
-  news_item.posted_date = parser.parse(request.json['posted_date'])
-  news_item.last_modified_date = parser.parse(request.json['last_modified_date'])
-  news_item.put();
-
-  # Loop through the tags to add them
-  for tag_name in request.json['tags']:
-    tag_name = tag_name.strip()
-    if tag_name == '':
-      continue  
-
-    tag = Tag(key_name=tag_name, tag=tag_name)
-    tag.put()
-    news_item_tag = NewsItemTag()
-    news_item_tag.tag = tag.key()
-    news_item_tag.news_item = news_item.key()
-    news_item_tag.put()
-
-  return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
-
-  
-@application.route(r'/blog/')
-def blog_redirect():
-  return redirect(url_for('index'))
+####################
+# View route handling
 
 @application.route(r'/')
 @application.route(r'/blog/id/<int:news_item_id>/')    
@@ -126,128 +22,21 @@ def blog_redirect():
 @application.route(r'/blog/modified/<int:year>/', defaults={'recently_modified' : True})
 @application.route(r'/blog/modified/<int:year>/page/<page>/', defaults={'recently_modified' : True})
 def index(news_item_id=0, title=None, page=1, drafts=False, tag='', recently_modified=False, year=0):
-  if page < 1:
-    page = 1
-  archive_list = NewsItem.get_year_list()
-  tag_list = NewsItem.get_tag_list()
-  return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year, archive_list=archive_list, tag_list=tag_list);
-  
-
-#Blog comments
-@application.route(r'/newsItems/<int:news_item_id>/comments')
-def get_comments(news_item_id):
-  news_item = NewsItem.get_by_id(news_item_id)
-  comments = news_item.sorted_comments()
-  logging.info(len(comments))
-  logging.info(news_item._linkback);
-  p = [x.jsonData for x in comments]
-  return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
-
-
-@application.route(r'/comments/<int:comment_id>', methods=['PUT'])
-@application.route(r'/newsItems/<int:news_item_id>/comments', methods=['POST'])
-def post_comment(news_item_id=None, comment_id=None):
-  if comment_id:
-    comment = NewsItemComment.get_by_id(comment_id)
-    if ('is_public' in request.json):
-      comment.is_public = request.json['is_public'];
-    else:
-      comment.is_public = False
-
-    # Should we report as good?
-    if ('report_as_good' in request.json):
-      if report_as_good(comment, request):
-        logging.info('reported as good!')
-      else:
-        logging.info('FAILED TO reported as good!')
-
-    # Should we report as spam?
-    if ('report_as_spam' in request.json):
-      if report_as_spam(comment, request):
-        logging.info('reported as spam!')
-      else:
-        logging.info('FAILED TO reported as spam!')
-
-  else:
-    comment = NewsItemComment.create()
-    comment.is_plublic = False
-    if news_item_id:
-      news_item = NewsItem.get_by_id(news_item_id)
-      comment.news_item = news_item
-
-  # TODO: Most of this code can go in the model with a fromJSONData function
-  comment.name = request.json['name']
-  comment.email = request.json['email']
-  comment.body = request.json['body']
-  comment.homepage = request.json['homepage']
-  comment.posted_date = datetime.datetime.now()
-  comment.poster_ip = request.remote_addr
-
-  comment.put()
-
-  send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
-
-  return Response(json.dumps(comment.jsonData, default=dthandler),  mimetype='application/json')
-
-
-@application.route(r'/comments/', methods=['GET'])
-def get_all_comments():
-  news_item_comments = NewsItemComment.all()
-  p = [x.allJSONData for x in news_item_comments]
-  return Response(json.dumps(p),  mimetype='application/json')
-
-@application.route(r'/comments/<int:comment_id>', methods=['DELETE'])
-def delete_comment(comment_id):
-  comment = NewsItemComment.get_by_id(int(comment_id))
-  comment.delete();
-  return Response(json.dumps({}),  mimetype='application/json')
+  return views.index(news_item_id, page, drafts, tag, recently_modified, year)
 
 @application.route(r'/other/whatsMyIP/')
 def whats_my_ip():
-  return render_template('whats_my_ip.html', client_IP=request.remote_addr)
+  return views.whats_my_ip()
 
 @application.route(r'/resume/pdf/')
 def resume_pdf():
-  result = StringIO()
-  html = render_template('resume_pdf.html')
-  pdf = pisa.CreatePDF(html.encode('utf8'), result)
-  val = result.getvalue();
-  response = Response(result.getvalue())
-  response.headers['Content-Type'] = 'application/pdf'
-  response.headers['Content-Disposition'] = 'attachment; filename=BrianRBondy_Resume.pdf'
-  return response;
+  return views.resume_pdf()
 
 #RSS all, or by tag
 @application.route(r'/feeds/rss/')
 @application.route(r'/feeds/rss/<tagged>/')
 def get_rss(tagged=''):
-  rss_xml = NewsItem.get_rss_feed(tagged)
-  return Response(rss_xml,  mimetype='application/rss+xml')
-
-
-# Administer the site 
-@application.route(r'/admin1/')
-def admin_page():
-  return render_template('admin/index.html', memcache_stats=memcache.get_stats())
-
-@application.route(r'/admin1/newsItems/')
-def admin_news_items():
-  return render_template('admin/newsItems.html', news_item_list=NewsItem.all().order('-posted_date'));
-
-@application.route(r'/admin1/newsItems/add/')
-@application.route(r'/admin1/newsItems/<news_item_id>/')
-def admin_news_item(news_item_id = 0):
-  return render_template('admin/newsItem.html', news_item_id = news_item_id)
-
-
-@application.route(r'/admin1/news_item_comments/')
-def admin_news_item_comments():
-  return render_template('admin/newsItemComments.html')
-
-@application.route(r'/admin1/clear_memcache/')
-def clear_memcache():
-  memcache.flush_all()
-  return redirect(url_for('admin_page'))
+  return views.get_rss(tagged)
 
 @application.route(r'/test/', defaults={'tmpl': 'test.html'} )
 @application.route(r'/contact/', defaults={'tmpl': 'contact.html'})
@@ -402,5 +191,84 @@ def clear_memcache():
 @application.route(r'/stackexchange/expected-age/wordpress/', defaults={'tmpl': 'StackExchangeTwitter/ExpectedAge-Wordpress.html'})
 @application.route(r'/facebook/pimemorize/', defaults={'tmpl': 'facebook/pimemorize.html'})
 @application.route(r'/maze/', defaults={'tmpl': 'maze.html'})  
-def direct_template(tmpl, name=None):
-  return render_template(tmpl, name=name);
+def direct_template(tmpl):
+  return views.direct_template(tmpl);
+
+####################
+# API route handling
+
+@application.route(r'/newsItems/all/', methods=['GET'], defaults={'drafts': None })
+@application.route(r'/newsItems/', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/tagged/<tag>/', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/drafts/', methods=['GET'], defaults={'drafts': True})
+@application.route(r'/newsItems/drafts/page/<int:page>', methods=['GET'], defaults={'drafts': True})
+@application.route(r'/newsItems/page/<int:page>', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/tagged/<tag>/page/<int:page>', methods=['GET'], defaults={'drafts': False})
+@application.route(r'/newsItems/modified/recent/', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
+@application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
+@application.route(r'/newsItems/posted/<int:year>')
+@application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
+def get_news_items(id=None, drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
+  return api.get_news_items(id, drafts, page, order_by, tag, recently_modified, year);
+
+@application.route(r'/newsItems/<int:id>', methods=['GET'])
+def get_news_item(id):
+  return api.get_news_item(id)
+
+@application.route(r'/newsItems/<int:news_item_id>/comments')
+def get_comments(news_item_id):
+  return api.get_comments(news_item_id)
+
+@application.route(r'/newsItems/<int:news_item_id>', methods=['DELETE'])
+def delete_news_items(news_item_id):
+  return api.delete_news_item(news_item_id)
+
+@application.route(r'/newsItems/<int:news_item_id>', methods=['PUT'])
+@application.route(r'/newsItems/', methods=['POST'])
+def post_news_item(news_item_id=None):
+  return api.post_news_item(news_item_id)
+
+@application.route(r'/comments/<int:comment_id>', methods=['PUT'])
+@application.route(r'/newsItems/<int:news_item_id>/comments', methods=['POST'])
+def post_comment(news_item_id=None, comment_id=None):
+  return api.post_comment(news_item_id, comment_id)
+
+@application.route(r'/comments/', methods=['GET'])
+def get_all_comments():
+  return api.get_all_comments()
+
+@application.route(r'/comments/<int:comment_id>', methods=['DELETE'])
+def delete_comment(comment_id):
+  return api.delete_comment(comment_id)
+
+######################
+# Admin route handling
+
+@application.route(r'/admin/')
+def admin_page():
+  return admin.admin_page()
+
+@application.route(r'/admin/newsItems/')
+def admin_news_items():
+  return admin.admin_news_items()
+
+@application.route(r'/admin/newsItems/add/')
+@application.route(r'/admin/newsItems/<news_item_id>/')
+def admin_news_item(news_item_id = 0):
+  return admin.admin_news_item(news_item_id)
+
+@application.route(r'/admin/news_item_comments/')
+def admin_news_item_comments():
+  return admin.admin_news_item_comments()
+
+@application.route(r'/admin/clear_memcache/')
+def clear_memcache():
+  return admin.clear_memcache()
+
+####################
+# Redirects handling
+
+@application.route(r'/blog/')
+def blog_redirect():
+  return redirect(url_for('index'))
+

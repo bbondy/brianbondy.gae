@@ -13,6 +13,7 @@
 <script type="text/javascript">
   var newsItemId = {{news_item_id}};
   var page = {{page}};
+  var count = {{count}};
   var tag = '{{tag}}';
   var drafts = !!{{drafts|int}};
   var recentlyModified = !!{{recently_modified|int}};
@@ -68,7 +69,21 @@
  <a href="/feeds/rss/"><img border="0" src="/static/img/rss2.png" alt="RSS Feed" width="80" height="15" /></a>
  <br><br><br>
 
-<div id="news-items"/>
+
+<div id="news-items">
+</div>
+
+{% if prev_url %}
+  <a href='{{prev_url}}'><span class='navigation_button'>Prev page</span></a>
+{% endif %}
+
+{% if next_url %}
+  <a href='{{next_url}}'><span class='navigation_button'>Next page</span></a>
+{% endif %}
+
+</div>
+
+
 {% endblock %}
 
 {% block extra_div %}

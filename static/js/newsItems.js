@@ -52,6 +52,10 @@ define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(mode
         newsItems.url += 'page/' + page;
       }
 
+      if (count) {
+        newsItems.url += '?count=' + count;
+      }
+
       return { newsItems: newsItems };
     },
 
