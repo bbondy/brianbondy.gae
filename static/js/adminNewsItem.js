@@ -24,7 +24,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
     loadFromServer: function() {
        if (newsItemId) {
          var newsItem = this.state.newsItem;
-         newsItem.fetch().done(function() {
+         newsItem.fetch({ data: $.param({ uncached: 1}) }).done(function() {
            this.setState({ newsItem: newsItem });
          }.bind(this));
        }
@@ -66,7 +66,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
         return;
       }
       this.state.newsItem.destroy().done(function() {
-        location.href = '/admin1/newsItems/';
+        location.href = '/admin/newsItems/';
       }.bind(this));
     },
     handleChange: function(event) {
@@ -92,7 +92,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
           </p>
         </form>
         <br/>
-        <p><a href='/admin1/newsItems/'>Back to News Items</a></p>
+        <p><a href='/admin/newsItems/'>Back to News Items</a></p>
         </div>
       );
     }

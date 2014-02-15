@@ -208,8 +208,8 @@ def direct_template(tmpl):
 @application.route(r'/newsItems/modified/recent/page/<int:page>', methods=['GET'], defaults={'drafts': False, 'recently_modified': True})
 @application.route(r'/newsItems/posted/<int:year>')
 @application.route(r'/newsItems/posted/<int:year>/page/<int:page>')
-def get_news_items(id=None, drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
-  return api.get_news_items(id, drafts, page, order_by, tag, recently_modified, year);
+def get_news_items(drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
+  return api.get_news_items(drafts, page, order_by, tag, recently_modified, year);
 
 @application.route(r'/newsItems/<int:id>', methods=['GET'])
 def get_news_item(id):

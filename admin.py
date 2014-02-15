@@ -1,8 +1,10 @@
 from google.appengine.api import memcache
 from blog.models import * 
 from flask import render_template, redirect, url_for
+from google.appengine.api import users
 
 def admin_page():
+  logging.info('logged in with: ' + str(users.get_current_user()));
   return render_template('admin/index.html', memcache_stats=memcache.get_stats())
 
 def admin_news_items():

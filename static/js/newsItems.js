@@ -133,7 +133,7 @@ define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(mode
       }
       var lastModifiedTime = lastModifiedDate.getHours() + ':' + lastModifiedDate.getMinutes() + ':' + lastModifiedDate.getSeconds();
       var lastModifiedMonth = months[lastModifiedDate.getMonth()];
-      var lastModifiedStr = lastModifiedMonth + ' ' + lastModifiedDate.getDate() + ' ' + lastModifiedDate.getFullYear() + ', ' + lastModifiedTime;
+      var lastModifiedStr = lastModifiedMonth + ' ' + lastModifiedDate.getDate() + ' ' + lastModifiedDate.getFullYear();
 
       return (
 

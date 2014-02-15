@@ -200,7 +200,7 @@ li:not(.dolphinnav-ul-li) {
 line-height: 200%;
 }
 
-#sidebar2{
+#sidebar2 {
 	float: right; /* since this element is floated, a width must be given */
 	width: 145px; /* the actual width of this div, in standards-compliant browsers, or standards mode in Internet Explorer will include the padding and border in addition to the width */
 	height:100%
@@ -214,7 +214,7 @@ line-height: 200%;
 }
 
 
-#sidebar2 ul{ 
+#sidebar2 ul { 
 	font-weight: bold;
 	font-size:12px;
   font-family: OpenSans, "Gill Sans", Sans-Serif;
@@ -234,8 +234,6 @@ line-height: 200%;
 	line-height: 30px;
 	list-style-type: none;
 	border-top: 1px solid #BBBBBB;
-	padding-left: 20px;
-	background:url(/static/img/mini-cal.gif) no-repeat left center;
 }
 
 #sidebar2 #sidebar3 li{
@@ -621,12 +619,11 @@ font-size: 90%;
 }
 
 
-#tag-label{
+#tag-label {
 padding-left:10px;
 padding-bottom: 5px;
 text-decoration:none;
-line-height:1.5;
-color:#777;
+font-size: 12px;
 }
 
 .gravatar 

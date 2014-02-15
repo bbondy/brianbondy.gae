@@ -19,7 +19,7 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
 
     loadFromServer: function() {
        var newsItems = this.state.newsItems;
-       newsItems.fetch().done(function() {
+       newsItems.fetch({ data: $.param({ uncached: 1}) }).done(function() {
          this.setState({ newsItems: newsItems });
        }.bind(this));
      },

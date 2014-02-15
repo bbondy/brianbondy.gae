@@ -5,6 +5,7 @@ from libs import PyRSS2Gen
 import logging
 import md5
 import layer_cache
+from google.appengine.api import memcache
 
 class BaseModel(db.Model):
   pass

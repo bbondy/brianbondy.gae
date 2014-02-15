@@ -7,21 +7,36 @@ from blog.models import *
 from spamController import *
 from emailController import *
 
+from app import *
 from flask import request, Response
 from dateutil import parser
 
+from google.appengine.api import memcache
+
 # TODO: Should abstract away this usage
 from google.appengine.ext.db import Key
+from google.appengine.api import users
 
 dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime)  or isinstance(obj, datetime.date) else None
 
-@layer_cache.cache_with_key_fxn(lambda id, drafts, page, order_by, tag, recently_modified, year: "get_news_items_%s_%s_%s_%s_%s_%s_%s" % (id, drafts, page, order_by, tag, recently_modified, year))
-def get_news_items(id=None, drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
+@application.errorhandler(401)
+def custom_401(error):
+    return Response('You must be logged in', 401, {'WWWAuthenticate':'Basic realm="Login Required"'})
+
+def get_news_items(drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
+  if 'uncached' in request.args or drafts:
+    return get_news_items_uncached(drafts, page, order_by, tag, recently_modified, year)
+  return get_news_items_cached(drafts, page, order_by, tag, recently_modified, year)
+  
+@layer_cache.cache_with_key_fxn(lambda drafts, page, order_by, tag, recently_modified, year: "get_news_items_%s_%s_%s_%s_%s_%s" % (drafts, page, order_by, tag, recently_modified, year))
+def get_news_items_cached(drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
+  return get_news_items_uncached(drafts, page, order_by, tag, recently_modified, year)
+
+def get_news_items_uncached(drafts=False, page=1, order_by=None, tag='', recently_modified=False, year=None):
   if 'count' in request.args:
     count = int(request.args['count'])
   else:
     count = 2
-  logging.info(str(count) + ' is for count');
   if page < 1:
     page = 1
   order_by = '-posted_date'
@@ -42,10 +57,19 @@ def get_news_items(id=None, drafts=False, page=1, order_by=None, tag='', recentl
   p = [x.jsonData for x in news_items]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
-@layer_cache.cache_with_key_fxn(lambda id: "get_news_item_%s" % (id))
 def get_news_item(id):
+  if 'uncached' not in request.args:
+    logging.info('getting cached news item')
+    return get_news_item_cached(id)
+
+  logging.info('getting uncached news item')
   key = Key.from_path('NewsItem', str(id))
   news_item = NewsItem.get(key)
+  return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
+
+@layer_cache.cache_with_key_fxn(lambda id: "get_news_item_%s" % (id))
+def get_news_item_cached(id):
+  news_item = NewsItem.get_by_id(id)
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
 
 @layer_cache.cache_with_key_fxn(lambda news_item_id: "get_comments_%s" % (news_item_id))
@@ -58,13 +82,15 @@ def get_comments(news_item_id):
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
 # Note you can also call this from non admin, but with restricted allowance
+# If the user is not authorized, is_public property will be ignored and will sipmly
+# be set to false.
 def post_comment(news_item_id=None, comment_id=None):
   if comment_id:
     comment = NewsItemComment.get_by_id(comment_id)
-    if ('is_public' in request.json):
-      comment.is_public = request.json['is_public'];
-    else:
-      comment.is_public = False
+    comment.is_public = False
+    if users.get_current_user():
+      if ('is_public' in request.json):
+        comment.is_public = request.json['is_public'];
 
     # Should we report as good?
     if ('report_as_good' in request.json):
@@ -101,14 +127,20 @@ def post_comment(news_item_id=None, comment_id=None):
 
   return Response(json.dumps(comment.jsonData, default=dthandler),  mimetype='application/json')
 
+# Does nothing if the user is not authenticated
+def delete_news_item(news_item_id):
+  if not users.get_current_user():
+    abort(401)
 
-def delete_news_items(news_item_id):
-  key = Key.from_path('NewsItem', str(news_item_id))
-  news_item = NewsItem.get(key)
+  logging.info('Getting news item id: ' + str(news_item_id))
+  news_item = NewsItem.get_by_id(news_item_id)
   news_item.delete()
   return Response(json.dumps({}),  mimetype='application/json')
 
 def post_news_item(news_item_id=None):
+  if not users.get_current_user():
+    abort(401)
+
   if news_item_id:
     key = Key.from_path('NewsItem', str(news_item_id))
     news_item = NewsItem.get(key)
@@ -139,12 +171,20 @@ def post_news_item(news_item_id=None):
 
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
 
+# Returns an empty array if the user is not authorized to view all comments at once
 def get_all_comments():
+  if not users.get_current_user():
+    abort(401)
+
   news_item_comments = NewsItemComment.all()
   p = [x.allJSONData for x in news_item_comments]
   return Response(json.dumps(p),  mimetype='application/json')
 
+# Does nothing if the user is not authenticated
 def delete_comment(comment_id):
+  if not users.get_current_user():
+    abort(401)
+
   comment = NewsItemComment.get_by_id(int(comment_id))
   comment.delete();
   return Response(json.dumps({}),  mimetype='application/json')
