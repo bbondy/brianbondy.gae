@@ -147,13 +147,13 @@ define(['models', 'react', 'showdown', 'jsx!gravatar', 'jquery'], function(model
 
           <form className='comments' style={{display: 'none'}} onSubmit={this.handleSubmit} id={'addComment' + this.props.newsItemId} method='POST'>
                  <label htmlFor='name'>Name:</label>
-                 <input name='name' id='name' ref='name' placeholder='Your name' required='' type='text'/><br/>
+                 <input name='name' id='name' ref='name' placeholder='Your name' required type='text'/><br/>
                  <label htmlFor='email'>Email:</label>
-                 <input placeholder='email@example.com' name='email' ref='email' id='email' required='' type='email'/><br/>
+                 <input placeholder='email@example.com' name='email' ref='email' id='email' required type='email'/><br/>
                  <label htmlFor='homepage'>Homepage:</label>
                  <input name='homepage' placeholder='Optional homepage' ref='homepage' id='homepage' type='url'/><br/>
                  <label htmlFor='body'>Comment:</label>
-                 <textarea type='text' name='body' id='body' ref='body' placeholder='Enter your comment here, markdown accepted' required=''></textarea><br/>
+                 <textarea type='text' name='body' id='body' ref='body' placeholder='Enter your comment here, markdown accepted' required></textarea><br/>
                  <input value='Submit' type='submit'/>
           </form>
           </div>
