@@ -74,10 +74,12 @@ def get_news_item_cached(id):
 
 @layer_cache.cache_with_key_fxn(lambda news_item_id: "get_comments_%s" % (news_item_id))
 def get_comments(news_item_id):
-  news_item = NewsItem.get_by_id(news_item_id)
+  key = Key.from_path('NewsItem', str(news_item_id))
+  # Don't use get_by_id here since this can be a draft and that function
+  # doesn't return draft items
+  news_item = NewsItem.get(key)
+  news_item.add_meta_fields()
   comments = news_item.sorted_comments()
-  logging.info(len(comments))
-  logging.info(news_item._linkback);
   p = [x.jsonData for x in comments]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
@@ -108,7 +110,7 @@ def post_comment(news_item_id=None, comment_id=None):
 
   else:
     comment = NewsItemComment.create()
-    comment.is_plublic = False
+    comment.is_public = False
     if news_item_id:
       news_item = NewsItem.get_by_id(news_item_id)
       comment.news_item = news_item
@@ -124,6 +126,9 @@ def post_comment(news_item_id=None, comment_id=None):
   comment.put()
 
   send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
+
+  if comment.is_public:
+    memcache.flush_all()
 
   return Response(json.dumps(comment.jsonData, default=dthandler),  mimetype='application/json')
 
