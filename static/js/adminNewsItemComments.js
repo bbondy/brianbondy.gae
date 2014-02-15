@@ -100,6 +100,8 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
             <br/>
             Email: {comment.get('email')}
             <br/>
+            Posted on: {comment.get('posted_date')}
+            <br/>
             Body: {comment.get('body')}
             <br/>
             <a href='#' onClick={this.onDelete}>Delete</a> |
