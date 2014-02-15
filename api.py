@@ -183,7 +183,7 @@ def get_all_comments():
   if not users.get_current_user():
     abort(401)
 
-  news_item_comments = NewsItemComment.all()
+  news_item_comments = NewsItemComment.all().order('-posted_date')
   p = [x.allJSONData for x in news_item_comments]
   return Response(json.dumps(p),  mimetype='application/json')
 
