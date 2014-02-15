@@ -1,12 +1,18 @@
 <!-- 
+
+
+@font-face{font-family:'OpenSans';src:url("/static/fonts/OpenSans-Regular-webfont.eot");src:url("/static/fonts/OpenSans-Regular-webfont.eot?#iefix") format('embedded-opentype') , url("/static/fonts/OpenSans-Regular-webfont.woff") format('woff') , url("/static/fonts/OpenSans-Regular-webfont.ttf") format('truetype') , url("/static/fonts/OpenSans-Regular-webfont.svg#open_sansregular") format('svg');font-weight:normal;font-style:normal}
+@font-face{font-family:'OpenSansLight';src:url("/static/fonts/OpenSans-Light-webfont.eot?#iefix") format('embedded-opentype') , url("/static/fonts/OpenSans-Light-webfont.woff") format('woff') , url("/static/fonts/OpenSans-Light-webfont.ttf") format('truetype') , url("/static/fonts/OpenSans-Light-webfont.svg#open_sanslight") format('svg');font-weight:normal;font-style:normal}
+
 body  {
-      font-family: "Gill Sans", Sans-Serif;
-	background: #FFFFFF url(/static/img/main-bg.jpg) repeat-x top left;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
+  background-color: #f0f0f0;
 	margin: 0;
 	padding: 0;
 	text-align: center;
 	color: #636363;
 }
+
 #container{ 
 	width: 950px;
 	height: 100%;
@@ -30,17 +36,72 @@ body  {
 	text-align: left;
 	border-right: 1px solid #BBBBBB;
 	border-left: 1px solid #BBBBBB;
+	border-bottom: 2px solid #BBBBBB;
 	background: #FFFFFF url(/static/img/content_bg.jpg) repeat-x top left;
 } 
 
 
-#header { 
-	width: 950px;
-	height: 75px;
-	background: #0A3271 url(/static/img/header.jpg) no-repeat top left; 
-	margin: 0 auto;
-	padding: 0;
+.fa {
+  color: black;
 }
+
+.fa-twitter {
+  font-size: 40px;
+  color: #00ABF1;
+}
+
+.fa-leaf {
+  color: #8AAB1C;
+}
+
+.fa-youtube-play {
+  color: #DB1A24;
+}
+
+.fa-rss {
+  color: #FD7613;
+}
+
+.fa-bug {
+  color: #8AAB1C;
+}
+
+.fa-stack-overflow {
+}
+
+#header { 
+	width: 920px;
+  height: 50px;
+  /*background-color: #92B2CF;*/
+  background-color: #f0f0f0;
+	padding-top: 10px;
+	padding-left: 20px;
+  font-size: 25px;
+  padding-right: 10px;
+  margin-bottom: 0px;
+	border-top: 3px solid #92B2CF;
+}
+
+#header-media-icons
+{
+  text-align: right;
+  letter-spacing:5px;
+  color: #f00;
+  display: inline;
+  float: right;
+  margin-top: 8px;
+  margin-bottom:5px;
+}
+
+#header-text
+{
+ 
+  float: left;
+  font-size: 28px;
+  text-align: left;
+  margin-top: 7px;
+}
+
 #content_container {
 	width: 950px;
 }
@@ -50,6 +111,7 @@ h1 {
 	line-height: 30px;
 	margin: 0;
 	padding: 0;
+  margin-bottom:20px;
 	color: #003663;
 }
 h2 {
@@ -75,7 +137,7 @@ h3 {
 	height:33px;
 	color:#E0E0E0;
 	width:100%;
-      font-family: "Gill Sans", Sans-Serif;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
 	background: transparent url(/static/img/dolphin_bg.gif) repeat-x bottom left;
 }
 #dolphinnav {
@@ -134,37 +196,9 @@ h3 {
 	background: #93B2CE url(/static/img/dolphin_right-ON.png) no-repeat top right;
 	height:33px;
 }
-#sidebar1 {
-	float: left;
-	width: 160px;
-	border-top: 1px solid #FFFFFF;
-	border-right: 1px solid #FFFFFF;
-	border-bottom: 1px solid #FFFFFF;
-	background: #F8F8F8 url(/static/img/left-nav-bg.jpg) repeat-y top right;
-	margin: 0;
-	padding: 0
+li:not(.dolphinnav-ul-li) {
+line-height: 200%;
 }
-
-
-#sidebar1 li{
-	font-size: 90%;
-	color: #636363;
-	text-align: right;
-	line-height: 30px;
-	list-style-type: none;
-	border-bottom: 1px solid #BBBBBB;
-	padding-right: 10px;
-}
-#sidebar1 a {
-	color: #636363;
-	text-decoration: none;
-}
-
-#sidebar1 a.current, #sidebar1 a:hover{
-	color: #002157;
-	text-decoration: none;
-}
-
 
 #sidebar2{
 	float: right; /* since this element is floated, a width must be given */
@@ -173,8 +207,9 @@ h3 {
 	border-top: 1px solid #FFFFFF;
 	border-left: 1px solid #999;
 	border-bottom: 1px solid #999; 
-	background: #F8F8F8 url(/static/img/right-nav-bg.jpg) repeat-y top left; /* the background color will be displayed for the length of the content in the column, but no further */
+  background-color: #eee;
 	margin: 0;
+	margin-left: 10px;
 	padding: 0; /* padding keeps the content of the div away from the edges */
 }
 
@@ -182,7 +217,7 @@ h3 {
 #sidebar2 ul{ 
 	font-weight: bold;
 	font-size:12px;
-        font-family: "Gill Sans", Sans-Serif;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
 	color: #636363;
 	text-align: left;
 	line-height: 30px;
@@ -193,7 +228,7 @@ h3 {
 #sidebar2 li{
 	font-weight: normal;
 	font-size:12px;
-        font-family: "Gill Sans", Sans-Serif;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
 	color: #636363;
 	text-align: left;
 	line-height: 30px;
@@ -206,7 +241,7 @@ h3 {
 #sidebar2 #sidebar3 li{
 	font-weight: normal;
 	font-size:12px;
-        font-family: "Gill Sans", Sans-Serif;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
 	text-align: left;
 	line-height: 30px;
 	list-style-type: none;
@@ -226,11 +261,14 @@ h3 {
 	text-decoration: none;
 }
 #mainContent { 
-	margin: 0 160px;
 	width: auto;
 	height: auto;
 	border-top: 1px solid #FFFFFF;
-	padding: 40px 20px;
+	padding: 40px 30px;
+  margin-top: 10px;
+	padding-bottom:100px;
+	border-bottom: 1px solid #FFFFFF;
+
 }
 
 
@@ -245,7 +283,7 @@ h3 {
 	color:#FFFFFF;
 	width:100%;
 	text-align: left;
-      font-family: "Gill Sans", Sans-Serif;
+  font-family: OpenSans, "Gill Sans", Sans-Serif;
 	background: #000000 url(/static/img/dolphin_bg.gif) repeat-x top left;
 	float:left;
 	clear:both;
@@ -346,6 +384,7 @@ overflow: hidden;
 span.blog-social
 {
   float: right;
+  margin-right: 50px;
 }
 
 #upper-nav {
@@ -443,7 +482,6 @@ a
 
 #mainContent li
 {
-	margin-top:10px;
 }
 
 img
@@ -453,19 +491,18 @@ img
 
 strong
 {
-	font-weight:bold;
-	font-size:98%;
+	font-weight:900;
 }
 
 .bold-divider {
 	border-bottom:2px dotted #777;
-	width:100%;
+	width:70%;
 }
 
 hr
 {
 	background-color: #999;
-	background: #fff url(/static/img/content-DIVIDER.gif) no-repeat scroll center;
+	background: #fff url(/static/img/content-DIVIDER.gif) no-repeat scroll left;
 	height: 1px;
 	border: 0px;
 }
@@ -575,12 +612,12 @@ background-color:#ddd;
 border-bottom:1px solid #777;
 border-right:1px solid #777;
 color:#777;
-font-size:80%;
-line-height:2.5;
-margin:3px 3px 3px 0;
+line-height:3;
+margin:5px 5px 5px 0;
 padding:3px 4px;
 text-decoration:none;
 white-space:nowrap;
+font-size: 90%;
 }
 
 
@@ -588,7 +625,6 @@ white-space:nowrap;
 padding-left:10px;
 padding-bottom: 5px;
 text-decoration:none;
-font-size:90%;
 line-height:1.5;
 color:#777;
 }
@@ -608,16 +644,6 @@ border-top: 1px solid #BBBBBB;
 #tag-label-container{
 border-top: 1px solid #BBBBBB;
 }
-
-#header a#homelogo{
-position:static;
-display:inline-block;
-width:260px;
-height:70px;
-top:10px;
-left:10px;
-}
-
 
 blockquote{
 margin-left:0px;

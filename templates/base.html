@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/rss/" />
 <link rel="shortcut icon" href="/favicon.ico" />
+<link href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet' />
 
 <title>{% block pagetitle %}Brian R. Bondy{% endblock %}</title> 
 <style type="text/css">
@@ -22,9 +23,42 @@
 
 <div id="container">
   <div id="header">
-  <a href="http://brianbondy.com/" id="homelogo"></a>
+    <span id='header-text'>Brian R. Bondy</span>
+    <span id='header-media-icons'>
 
-</div>
+    <a href='http://stackoverflow.com/users/3153/brian-r-bondy'>
+      <i class='fa fa-stack-overflow' title='Stack Overflow profile'></i>
+    </a>
+
+    <a href='https://bugzilla.mozilla.org/buglist.cgi?list_id=3095352;resolution=FIXED;emailtype1=exact;emailassigned_to1=1;query_format=advanced;bug_status=RESOLVED;bug_status=VERIFIED;bug_status=CLOSED;email1=netzen%40gmail.com'>
+      <i class='fa fa-bug' title='Firefox contributions'></i>
+    </a>
+     
+    <a href='https://www.youtube.com/user/bbondy'>
+      <i class='fa fa-youtube-play' title='YouTube channel'></i>
+    </a>
+    <a href='https://github.com/bbondy'>
+      <i class='fa fa-github' title='GitHub profile'></i>
+    </a>
+
+    <a href='https://www.khanacademy.org/profile/bbondy/'>
+      <i class='fa fa-leaf' title='Khan Academy profile'></i>
+    </a>
+
+    <a href='http://ca.linkedin.com/in/bbondy'>
+      <i class='fa fa-linkedin' title='Linked in profile'></i>
+    </a>
+
+    <a href='/feeds/rss/'>
+      <i class='fa fa-rss' title='RSS feed for this site'></i>
+    </a>
+
+    <a href='https://twitter.com/brianbondy'>
+      <i class='fa fa-twitter' title='@brianbondy'></i>
+    </a>
+  </span>
+
+  </div>
 </div>
 
 <div id="dolphincontainer">
@@ -40,30 +74,6 @@
   </div>
 </div>
 <div id="container2">
-  <div id="sidebar1">
-    <ul>
-      <li><a href="/" title="" id="sidebar_blog"> Blog</a></li>
-      <li><a href="/compression/" title="" id="sidebar_compression">Compression</a></li>
-      <li><a href="/math/" title="" id="sidebar_math">Mathematics</a></li>
-      <li><a href="/mozilla" title="" id="sidebar_mozilla">Mozilla</a></li>
-      <li><a href="/stackexchange" title="" id="sidebar_stackexchange">Stack Exchange</a></li>
-      <li><a href="/khanacademy" title="" id="sidebar_khanacademy">Khan Academy</a></li>
-      <li><a href="/projects/" title="" id="sidebar_projects">Projects</a></li>
-      <li><a href="/resume/" title="" id="sidebar_resume">Resume</a></li>
-      <li><a href="/about/" title="" id="sidebar_about">About</a></li>
-      <li><a href="/contact/" title="" id="sidebar_contact">Contact</a></li>
-      <li><a href="/other/" title="" id="sidebar_other">Other</a></li>
-
-      <li><br/><strong>My Profiles</strong></li>
-      <li><a href="http://stackoverflow.com/users/3153/brian-r-bondy" title="" id="sidebar_stackoverflow" target="_new" rel="me"><img src='/static/img/externalLinkIcon.png' width="12" height="12" /> StackOverflow</a></li>
-      <li><a href="http://twitter.com/brianbondy" title="" id="sidebar_twitter" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Twitter</a></li>
-      <li><a href="http://www.linkedin.com/in/bbondy" title="" id="sidebar_linkedin" target="_new" rel="me"> <img src="/static/img/externalLinkIcon.png" width="12" height="12" /> LinkedIn</a></li>
-      <li><a href="http://www.khanacademy.org/profile/bbondy/" title="" id="sidebar_khanprofile" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Khan Academy</a></li>
-      <li><a href="https://bugzilla.mozilla.org/buglist.cgi?list_id=3095352;resolution=FIXED;emailtype1=exact;emailassigned_to1=1;query_format=advanced;bug_status=RESOLVED;bug_status=VERIFIED;bug_status=CLOSED;email1=netzen%40gmail.com" title="" id="sidebar_contributions" target="_new" rel="me"><img src="/static/img/externalLinkIcon.png" width="12" height="12" /> Firefox work</a></li>
-    </ul>
-
-  <!-- end #sidebar1 -->
-  </div>
 
   {% block extra_div %}
   {% endblock %}
@@ -73,7 +83,6 @@
 
    <div id="mainContent">
     <h1>{% block title %} {% endblock %}</h1>
-    <h2>{% block subtitle %} {% endblock %}</h2><br/>
 
 {% block main_content %}
 

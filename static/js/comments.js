@@ -145,7 +145,7 @@ define(['models', 'react', 'showdown', 'jsx!gravatar', 'jquery'], function(model
             <a href='#' onClick={this.toggleAddComment} className="comments-link">Add a new comment</a>
           </div>
 
-          <form className='comments' onSubmit={this.handleSubmit} id={'addComment' + this.props.newsItemId} method='POST'>
+          <form className='comments' style={{display: 'none'}} onSubmit={this.handleSubmit} id={'addComment' + this.props.newsItemId} method='POST'>
                  <label htmlFor='name'>Name:</label>
                  <input name='name' id='name' ref='name' placeholder='Your name' required='' type='text'/><br/>
                  <label htmlFor='email'>Email:</label>

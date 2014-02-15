@@ -173,71 +173,16 @@ define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(mode
               </span>
 
             </p>
+            <TagsView tags={n.get('tags')}/>
+            <CommentForm newsItemId={n.get('id')}/>
+            <CommentsView newsItemId={n.get('id')}/>
           </div>
-              <TagsView tags={n.get('tags')}/>
-          <CommentForm newsItemId={n.get('id')}/>
-          <CommentsView newsItemId={n.get('id')}/>
 
 
         </div>
       );
     }
 
-
-
-
-/*
-        <li>
-          <a href={url}>
-            {n.get('id')} : {n.get('title')}
-          </a>
-        </li>
-
-
-
-
-
-<a href='Javascript:toggleAddComment({#news_item.id#});' className='comments-link'>Add a new comment</a>
-{#{% if news_item.sorted_comments|length > 0 %}#}
-| <a href='Javascript:toggleComments({#news_item.id#});' className='comments-link'>{# news_item.sorted_comments|length #} comment(s)</a>
-{#{% endif %}#}
-
-<div id='AddComment-{#news_item.id#}' className='comments' style='display:none;'>
-{#{% include 'custom_comment_form.html' %}#}
-</div>
-{#{% if news_item.sorted_comments|length > 0 %}#}
-<p>
-
-  <div id='Comments-{#news_item.id#}' className='comments' width='50%'>
-  <table>
-  {#{% for comment in news_item.sorted_comments %}#}
-    <tr className='comment'>
-      <td className='comment-text'>
-        <p>
-          {#{% show_gravatar comment.email 80 %}#}
-          <a rel='external nofollow' href='{# comment.homepage#}'>{#comment.name#}</a> on 
-          <small className='comment-date'>{#comment.posted_date|date:'l, F d, Y (h:m:s)'#}</small> says:<br/>
-          {#comment.body|linebreaks#}
-        </p>
-      </td>
-    </tr>
-  {#{% endfor %}#}
-  </table>
-  </div>
-
-</p>
-{#{% endif %}#}
-
-</p>
-
-<br><br> <br><br>
-
-     </div>
-     </div>
-
-{#{% endfor %}#}
-
-*/
   });
 
   if (newsItemId) {
