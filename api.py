@@ -125,7 +125,9 @@ def post_comment(news_item_id=None, comment_id=None):
 
   comment.put()
 
-  send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
+  # If this was a new comment, then send an email about it
+  if not comment_id: 
+    send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
 
   if comment.is_public:
     memcache.flush_all()
