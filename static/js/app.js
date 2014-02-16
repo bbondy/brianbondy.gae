@@ -1,5 +1,5 @@
 require.config({
-  baseUrl: '/static/js',
+  baseUrl: '/static/js/build/',
   paths: {
     'jquery': 'http://code.jquery.com/jquery-1.11.0.min',
     //'jquery': 'jquery-1.11.0.js',
