@@ -1,0 +1,2 @@
+rm -Rf static/js/build
+jsx static/js/ static/js/build/
