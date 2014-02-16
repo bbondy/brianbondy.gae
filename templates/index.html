@@ -17,7 +17,7 @@
   var drafts = !!{{drafts|int}};
   var recentlyModified = !!{{recently_modified|int}};
   var year = {{year}};
-  require(['jsx!newsItems'], function() {
+  require(['newsItems'], function() {
     $(document.body).load(function () {
       $(".comments").slideUp();
     });

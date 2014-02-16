@@ -4,7 +4,7 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'jsx!comments'], function(models, React, Showdown, commentCtrls) {
+define(['models', 'react', 'showdown', 'comments'], function(models, React, Showdown, commentCtrls) {
 
   var converter = new Showdown.converter();
   var CommentsView = commentCtrls.CommentsView;
@@ -18,9 +18,7 @@ define(['models', 'react', 'showdown', 'jsx!comments'], function(models, React, 
     render: function() {
       var nodes = this.props.tags.map(function (tag) {
         var tagURL = '/blog/tagged/' + tag;
-        return <a href={tagURL}
-            className='post-tag' 
-            rel='tag'>{tag}</a>  
+        return <a href={tagURL} className='post-tag' rel='tag'>{tag}</a>  
       });
       return (
         <p> Tags:
