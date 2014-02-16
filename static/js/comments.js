@@ -119,7 +119,6 @@ define(['models', 'react', 'showdown', 'jsx!gravatar', 'jquery'], function(model
       body = body.replace(replaceHTMLExpr, '');
 
       if (!name || !body || !email) {
-        console.log('some empty');
         return false;
       }
       

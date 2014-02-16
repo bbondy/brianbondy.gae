@@ -101,21 +101,17 @@ define(['models', 'react', 'showdown', 'jsx!comments'], function(models, React, 
       }
     },
     componentWillMount: function() {
-      console.log('1the title is: ' +  this.state.newsItem.get('title'));
       if (this.state.preloaded)
         return;
-      console.log('2the title is: ' +  this.state.newsItem.get('title'));
       var n1 = this.state.newsItem;
       n1.fetch().done(function(ni) {
         this.setState({ newsItem: new models.NewsItem(ni) });
-      console.log('3the title is: ' +  this.state.newsItem.get('title'));
       }.bind(this));
     },
 
     render: function() {
 
       var n = this.state.newsItem;
-      console.dir(n);
 
       // This text has HTML manually stripped before it is used
       var title = n.get('title');
