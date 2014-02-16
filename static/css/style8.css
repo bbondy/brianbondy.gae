@@ -23,7 +23,6 @@ body  {
 	text-align: left;
 	border-right: 1px solid #BBBBBB;
 	border-left: 1px solid #BBBBBB;
-	background: #FFFFFF url(/static/img/content_bg.jpg) repeat-x top left;
 } 
 
 #container2 { 
@@ -37,7 +36,6 @@ body  {
 	border-right: 1px solid #BBBBBB;
 	border-left: 1px solid #BBBBBB;
 	border-bottom: 2px solid #BBBBBB;
-	background: #FFFFFF url(/static/img/content_bg.jpg) repeat-x top left;
 } 
 
 
@@ -138,7 +136,8 @@ h3 {
 	color:#E0E0E0;
 	width:100%;
   font-family: OpenSans, "Gill Sans", Sans-Serif;
-	background: transparent url(/static/img/dolphin_bg.gif) repeat-x bottom left;
+  background-color: #151F26;
+	border-bottom: 3px solid #92B2CF;
 }
 #dolphinnav {
 	position:relative;
@@ -146,8 +145,7 @@ h3 {
 	height:33px;
 	width: 930px;
 	font-size:12px;
-	border-bottom: 1px solid #FFFFFF;
-	background:#93B2CE url(/static/img/dolphin_bg.gif) repeat-x bottom left;
+  background-color: #151F26;
 	padding:0 0 0 20px;
 }
 #dolphinnav-ul{
@@ -171,13 +169,15 @@ h3 {
 	height:33px;
 }
 .dolphinnav-ul-li a span {
-	padding:12px 20px 0 0;
+  padding-top: 10px;
+  padding-right: 20px;
 	height:21px;
 	float:left;
+  margin-bottom-3px;
 }
 .dolphinnav-ul-li a:hover {
 	color:#fff;
-	background:transparent url(/static/img/dolphin_bg-OVER.gif) repeat-x bottom left;
+	background-color: #92B2CF;
 }
 .dolphinnav-ul-li a:hover span {
 	display:block;
@@ -186,14 +186,13 @@ h3 {
 }
 .dolphinnav-ul-li a.current,#dolphinnav ul li a.current:hover {
 	color:#636363;
-	background: #93B2CE url(/static/img/dolphin_left-ON.gif) no-repeat top left;
+	background: #93B2CE; 
 	line-height:275%;
 }
 .dolphinnav-ul-li a.current span {
 	display:block;
 	padding:0 20px 0 0;
 	width:auto;
-	background: #93B2CE url(/static/img/dolphin_right-ON.png) no-repeat top right;
 	height:33px;
 }
 li:not(.dolphinnav-ul-li) {
@@ -282,9 +281,10 @@ line-height: 200%;
 	width:100%;
 	text-align: left;
   font-family: OpenSans, "Gill Sans", Sans-Serif;
-	background: #000000 url(/static/img/dolphin_bg.gif) repeat-x top left;
+  background-color: #151F26;
 	float:left;
 	clear:both;
+	border-top: 3px solid #92B2CF;
 } 
 #footer {
 	position:relative;
@@ -293,10 +293,10 @@ line-height: 200%;
 	width: 930px;
 	font-size:12px;
 	border-bottom: 1px solid #FFFFFF;
-	background: #000000 url(/static/img/dolphin_bg.gif) repeat-x top left;
+  background-color: #151F26;
 	padding:0 0 0 30px;
-
 }
+
 #footer p {
 	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
 	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
@@ -323,10 +323,12 @@ line-height: 200%;
 	width: 45px;
 	height: 60px;
 	float:left;
-	background: url(/static/img/date-bg.png) no-repeat;
 	margin: 0 10px 0 0;
 }
 #post-month {
+background-color: #92B2CF;
+padding-top: 2px;
+padding-bottom: 2px;
 	font: 10px Myriad, Arial, Helvetica, sans-serif;
 	line-height: 11px;
 	color: #FFFFFF;
@@ -336,6 +338,8 @@ line-height: 200%;
 	margin-left: -3px;
 }
 #post-day {
+border-left: 1px solid;
+border-right: 1px solid;
 	font: 20px Myriad, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	color: #999999;
@@ -347,6 +351,10 @@ line-height: 200%;
 }
 
 #post-year {
+border-left: 1px solid;
+border-right: 1px solid;
+border-bottom: 1px solid;
+padding-bottom: 3px;
 	font: 9px Myriad, Arial, Helvetica, sans-serif;
 	line-height: 11px;
 	text-transform: uppercase;
@@ -383,6 +391,7 @@ span.blog-social
 {
   float: right;
   margin-right: 50px;
+  display: none; /*TODO: Re-enable */
 }
 
 #upper-nav {
@@ -392,7 +401,6 @@ span.blog-social
 	width: auto;
 	font-size:12px;
 	font-weight: bold;
-	background: url(/static/img/upper-nav.png) no-repeat top left;
 	padding: 0;
 }
 #upper-nav-ul{
@@ -461,7 +469,10 @@ span.blog-social
 #body_contact #dolphinnav_contact
 {
 	color:#636363;
-	background: #93B2CE url(/static/img/dolphin_right-ON.png) no-repeat top right;
+  background-color: #f0f0f0;
+  border-right: 1px solid;
+  border-left: 1px solid;
+	border-top: 3px solid #92B2CF;
 
 }
 
@@ -499,8 +510,7 @@ strong
 
 hr
 {
-	background-color: #999;
-	background: #fff url(/static/img/content-DIVIDER.gif) no-repeat scroll left;
+	background-color: #ccc;
 	height: 1px;
 	border: 0px;
 }
