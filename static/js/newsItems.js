@@ -4,7 +4,7 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(models, React, Showdown, plusOne, commentCtrls) {
+define(['models', 'react', 'showdown', 'jsx!comments'], function(models, React, Showdown, commentCtrls) {
 
   var converter = new Showdown.converter();
   var CommentsView = commentCtrls.CommentsView;
@@ -163,16 +163,6 @@ define(['models', 'react', 'showdown', 'plusone', 'jsx!comments'], function(mode
                <p dangerouslySetInnerHTML={{__html: rawBody}} />
             </div>
 
-            <p>
-              <span className='blog-social'>
-               <a rel='nofollow' href='{#news_item.twitter_link#}{#news_item.title|escape#}%20%40brianbondy%20{#news_item.linkback|escape#}'><img border='0' width='20' height='20' src='/static/img/twitter-icon.png' /></a>
-                <a rel='nofollow' href='{#news_item.facebook_link#}{#news_item.linkback|escape#}&t={#news_item.title|escape#}'><img border='0' width='20' height='20' src='/static/img/facebook-icon.jpg' /></a>
-                <a href='http://www.brianbondy.com/blog/id/{#news_item.id#}/{#news_item.title|lower|slugify#}'>
-                  <div data-size='medium' className='g-plusone'></div>
-                </a>
-              </span>
-
-            </p>
             <TagsView tags={n.get('tags')}/>
             <CommentForm newsItemId={n.get('id')}/>
             <CommentsView newsItemId={n.get('id')}/>

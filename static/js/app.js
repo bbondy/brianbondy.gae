@@ -1,16 +1,14 @@
 require.config({
   baseUrl: '/static/js',
   paths: {
-    //'jquery': 'http://code.jquery.com/jquery-1.11.0.min',
-    'jquery': 'jquery',
-    'underscore': 'underscore-min',
+    'jquery': 'http://code.jquery.com/jquery-1.11.0.min',
+    //'jquery': 'jquery-1.11.0.js',
     'acorn': 'acorn',
     'codecheck': 'codecheck',
-    'analytics': 'analytics',
     'react': 'react-0.8.0',
     'JSXTransformer': 'JSXTransformer',
-    'showdown': 'showdown-0.3.1',
-    //'showdown': 'http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min',
+    //'showdown': 'showdown-0.3.1',
+    'showdown': 'http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min',
 
     'gravatar': 'gravatar',
     'adminNewsItem': 'adminNewsItem',
@@ -20,17 +18,17 @@ require.config({
     'comments': 'comments',
     'gravatar': 'gravatar',
 
-    'backbone': 'backbone-1.1.0',
-    //'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',
-
+    //'backbone': 'backbone-1.1.0',
+    'underscore': 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
+    //'underscore': 'underscore-min'
+    'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',
 
     'models': 'models',
     'prettify': '/static/prettify/prettify',
-    'plusone': 'https://apis.google.com/js/plusone'
   }
 });
 
-require(['analytics', 'jquery', 'underscore', 'prettify'], function() {
+require(['underscore', 'jquery', 'prettify'], function() {
 
   $(document.body).load(function () {
       $(".comments").slideUp();
