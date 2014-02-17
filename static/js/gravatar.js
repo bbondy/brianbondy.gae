@@ -4,7 +4,7 @@
 
  "use strict";
 
-define(['react'], function(React) {
+define(['jquery', 'models', 'react', 'jquery'], function($, models, React) {
   var GravatarIcon = React.createClass({
     render: function() {
       if (!this.props.size)

@@ -4,7 +4,7 @@
 
  'use strict';
 
-define(['models', 'react', 'showdown', 'gravatar', 'jquery'], function(models, React, Showdown, GravatarIcon) {
+define(['jquery', 'models', 'react', 'showdown', 'gravatar'], function($, models, React, Showdown, GravatarIcon) {
 
   var converter = new Showdown.converter();
 

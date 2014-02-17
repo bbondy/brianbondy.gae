@@ -40,3 +40,5 @@ nosetests.xml
 
 # secrets
 secrets.py
+
+static/js/build*

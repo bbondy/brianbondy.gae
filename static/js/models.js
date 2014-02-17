@@ -1,4 +1,4 @@
-define(['backbone'], function(_) {
+define(['underscore', 'backbone'], function(_) {
 
   var NewsItem = Backbone.Model.extend({
     urlRoot: '/newsItems/',

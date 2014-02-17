@@ -1,15 +1,27 @@
 require.config({
-  baseUrl: '/static/js/build/',
+  baseUrl: '/static/js/build4/',
+  shim: {
+    'backbone': {
+      deps: ['underscore', 'jquery'],
+      exports: 'Backbone'
+    },
+    'underscore': {
+      exports: '_'
+    },
+    'jquery': {
+      exports: '$'
+    }
+  },
   paths: {
-    'jquery': 'http://code.jquery.com/jquery-1.11.0.min',
-    //'jquery': 'jquery-1.11.0.js',
+    //'jquery': 'http://code.jquery.com/jquery-1.11.0.min',
+    'jquery': 'jquery',
     'acorn': 'acorn',
     'codecheck': 'codecheck',
-    //'react': 'react-0.8.0',
-    'react': 'http://cdnjs.cloudflare.com/ajax/libs/react/0.8.0/react.min',
+    'react': 'react',
+    //'react': 'http://cdnjs.cloudflare.com/ajax/libs/react/0.8.0/react.min',
     'JSXTransformer': 'JSXTransformer',
-    //'showdown': 'showdown-0.3.1',
-    'showdown': 'http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min',
+    'showdown': 'showdown',
+    //'showdown': 'http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min',
 
     'gravatar': 'gravatar',
     'adminNewsItem': 'adminNewsItem',
@@ -19,17 +31,17 @@ require.config({
     'comments': 'comments',
     'gravatar': 'gravatar',
 
-    //'backbone': 'backbone-1.1.0',
-    'underscore': 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
-    //'underscore': 'underscore-min'
-    'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',
+    'backbone': 'backbone',
+    //'underscore': 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
+    'underscore': 'underscore',
+    //'backbone': 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min',
 
     'models': 'models',
     'prettify': '/static/prettify/prettify',
   }
 });
 
-require(['underscore', 'jquery', 'prettify'], function() {
+require(['jquery', 'underscore', 'prettify'], function($, _) {
 
   $(document.body).load(function () {
       $(".comments").slideUp();
