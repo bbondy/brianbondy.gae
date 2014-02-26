@@ -32,7 +32,6 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
 
     componentWillMount: function() {
       this.loadFromServer();
-      setInterval(this.loadFromServer, 60 * 1000);
     },
 
     handleSubmit: function(event) {
