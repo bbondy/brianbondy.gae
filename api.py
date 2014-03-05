@@ -138,9 +138,10 @@ def post_comment(news_item_id=None, comment_id=None):
 def delete_news_item(news_item_id):
   if not users.get_current_user():
     abort(401)
-
-  logging.info('Getting news item id: ' + str(news_item_id))
-  news_item = NewsItem.get_by_id(news_item_id)
+  # Don't use get_by_id here since this can be a draft and that function
+  # doesn't return draft items
+  key = Key.from_path('NewsItem', str(news_item_id))
+  news_item = NewsItem.get(key)
   news_item.delete()
   return Response(json.dumps({}),  mimetype='application/json')
 
