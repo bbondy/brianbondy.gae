@@ -116,14 +116,14 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
       var url = '/blog/id/' + n.get('id') + '/' + slugify(n.get('title'));
       var postedDate = n.get('posted_date');
       if (_.isString(postedDate)) { 
-        postedDate = new Date(Date.parse(n.get('posted_date').split(' ')[0]));
+        postedDate = new Date(Date.parse(n.get('posted_date').split(' ')[0].replace(/-/g, '/')));
       }
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       var postedMonth = months[postedDate.getMonth()];
       var rawBody = converter.makeHtml(n.get('body'));
       var lastModifiedDate = n.get('last_modified_date');
       if (_.isString(lastModifiedDate)) {
-        lastModifiedDate = new Date(Date.parse(n.get('last_modified_date').split(' ')[0]));
+        lastModifiedDate = new Date(Date.parse(n.get('last_modified_date').split(' ')[0].replace(/-/g, '/')));
       }
       var lastModifiedTime = lastModifiedDate.getHours() + ':' + lastModifiedDate.getMinutes() + ':' + lastModifiedDate.getSeconds();
       var lastModifiedMonth = months[lastModifiedDate.getMonth()];
