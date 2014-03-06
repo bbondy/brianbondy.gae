@@ -54,15 +54,19 @@ def get_news_items_uncached(drafts=False, page=1, order_by=None, tag='', recentl
     news_items = NewsItem.get_all_by_year(year, page_index, count, order_by)
   else:
     news_items = NewsItem.get_all(page_index, count, order_by=order_by)
+  news_items = list(news_items)
+
+  if 'noBody' in request.args:
+    for news_item in news_items:
+      news_item.body = ''
+
   p = [x.jsonData for x in news_items]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
 def get_news_item(id):
   if 'uncached' not in request.args:
-    logging.info('getting cached news item')
     return get_news_item_cached(id)
 
-  logging.info('getting uncached news item')
   key = Key.from_path('NewsItem', str(id))
   news_item = NewsItem.get(key)
   return Response(json.dumps(news_item.jsonData, default=dthandler),  mimetype='application/json')
