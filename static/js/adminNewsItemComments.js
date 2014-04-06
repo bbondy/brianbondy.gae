@@ -77,12 +77,15 @@ define(['models', 'react', 'showdown'], function(models, React, Showdown) {
   var CommentView = React.createClass({
     onDelete: function() {
       this.props.onDelete(this.props.comment);
+      return false;
     },
     onReportAsSpam: function() {
       this.props.onReportAsSpam(this.props.comment);
+      return false;
     },
     onReportAsGood: function() {
       this.props.onReportAsGood(this.props.comment);
+      return false;
     },
     render: function() {
       // This text has HTML manually stripped before it is used
