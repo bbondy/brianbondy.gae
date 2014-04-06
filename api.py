@@ -124,13 +124,15 @@ def post_comment(news_item_id=None, comment_id=None):
   comment.email = request.json['email']
   comment.body = request.json['body']
   comment.homepage = request.json['homepage']
-  comment.posted_date = datetime.datetime.now()
-  comment.poster_ip = request.remote_addr
+  # Only set the posted date and IP if this is not an old comment
+  if not comment_id:
+    comment.posted_date = datetime.datetime.now()
+    comment.poster_ip = request.remote_addr
 
   comment.put()
 
   # If this was a new comment, then send an email about it
-  if not comment_id: 
+  if not comment_id:
     send_email('bbondy@gmail.com', 'New comment posted by %s' % comment.name, comment.body)
 
   if comment.is_public:
