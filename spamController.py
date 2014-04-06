@@ -14,7 +14,7 @@ def report_as_spam(comment, request):
       'comment_author_email': comment.email or '',
       'comment_author_url': comment.homepage or '',
       }
-    akismet_api.submit_spam(comment.body, akismet_data,  build_data=True)
+    akismet_api.submit_spam(comment.body.encode('utf8', 'ignore'), akismet_data,  build_data=True)
     return True
   else:
     raise "Invalid Akismet key"
@@ -32,7 +32,7 @@ def report_as_good(comment, request):
       'comment_author_email': comment.email or '',
       'comment_author_url': comment.homepage or '',
       }
-    akismet_api.submit_ham(comment.body, akismet_data,  build_data=True)
+    akismet_api.submit_ham(comment.body.encode('utf8', 'ignore'), akismet_data,  build_data=True)
   else:
     raise "Invalid Akismet key"
 
@@ -50,7 +50,7 @@ def is_spam(comment, request):
       'comment_author_url': comment.homepage or '',
     }
 
-  if akismet_api.comment_check(comment.body, akismet_data,  build_data=True):
+  if akismet_api.comment_check(comment.body.encode('utf8', 'ignore'), akismet_data,  build_data=True):
     return True
   else:
     return False
