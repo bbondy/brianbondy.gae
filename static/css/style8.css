@@ -234,6 +234,10 @@ line-height: 200%;
   border-bottom: 1px solid #BBBBBB;
 }
 
+#sidebar2 ul li:last-child {
+  border-bottom: 0;
+}
+
 #sidebar2 #sidebar3 li{
   font-weight: normal;
   font-size:12px;
@@ -621,6 +625,7 @@ border-top: 1px solid #BBBBBB;
 }
 
 #tag-label-container{
+  border-top: 1px solid #BBBBBB;
 }
 
 blockquote{
