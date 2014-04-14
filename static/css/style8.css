@@ -29,7 +29,7 @@ body  {
   height: 100%;
   margin-top: 0px;
   margin-right: auto;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
   margin-left: auto;
   text-align: left;
   border-right: 1px solid #BBBBBB;
@@ -206,6 +206,7 @@ line-height: 200%;
   background-color: #eee;
   margin: 0;
   margin-left: 15px;
+  margin-bottom: 10px;
   padding: 0; /* padding keeps the content of the div away from the edges */
 }
 
@@ -271,34 +272,7 @@ line-height: 200%;
 #sidebar1 ul{
   padding: 0px 10px 10px 10px;
 }
-#footer_container { 
-  float: left;
-  margin: 0 auto;
-  height:33px;
-  color:#FFFFFF;
-  width:100%;
-  text-align: left;
-  font-family: OpenSans, "Gill Sans", Sans-Serif;
-  background-color: #151F26;
-  float:left;
-  clear:both;
-  border-top: 3px solid #92B2CF;
-} 
-#footer {
-  position:relative;
-  margin: 0 auto;
-  height:33px;
-  width: 930px;
-  font-size:12px;
-  border-bottom: 1px solid #FFFFFF;
-  background-color: #151F26;
-  padding:0 0 0 30px;
-}
 
-#footer p {
-  margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
-  padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
-}
 .fltrt { /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
   float: right;
   margin-left: 8px;
