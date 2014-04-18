@@ -5,7 +5,7 @@ from cStringIO import StringIO
 from blog.models import * 
 from flask import render_template, request, Response
 
-@layer_cache.cache_with_key_fxn(lambda news_item_id, page, drafts, tag, recently_modified, year: "index_%s_%s_%s_%s_%s_%s" % (news_item_id, page, drafts, tag, recently_modified, year))
+#@layer_cache.cache_with_key_fxn(lambda news_item_id, page, drafts, tag, recently_modified, year: "index_%s_%s_%s_%s_%s_%s" % (news_item_id, page, drafts, tag, recently_modified, year))
 def index(news_item_id=0, page=1, drafts=False, tag='', recently_modified=False, year=0):
   if page < 1:
     page = 1
@@ -49,12 +49,12 @@ def index(news_item_id=0, page=1, drafts=False, tag='', recently_modified=False,
   
   return render_template('index.html', news_item_id=news_item_id, page=page, drafts=drafts, tag=tag, recently_modified=recently_modified, year=year, archive_list=archive_list, tag_list=tag_list, count=count_per_page, available=available, prev_url=prev_url, next_url=next_url);
 
-@layer_cache.cache_with_key_fxn(lambda tagged: "tagged_%s" % (tagged))
+#@layer_cache.cache_with_key_fxn(lambda tagged: "tagged_%s" % (tagged))
 def get_rss(tagged=''):
   rss_xml = NewsItem.get_rss_feed(tagged)
   return Response(rss_xml,  mimetype='application/rss+xml')
 
-@layer_cache.cache_with_key_fxn(lambda tmpl: "direct_template_%s" % (tmpl))
+#@layer_cache.cache_with_key_fxn(lambda tmpl: "direct_template_%s" % (tmpl))
 def direct_template(tmpl):
   return render_template(tmpl);
 
@@ -62,7 +62,7 @@ def direct_template(tmpl):
 def whats_my_ip():
   return render_template('whats_my_ip.html', client_IP=request.remote_addr)
 
-@layer_cache.cache()
+#@layer_cache.cache()
 def resume_pdf():
   result = StringIO()
   html = render_template('resume_pdf.html')
