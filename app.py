@@ -1,7 +1,18 @@
 import os
 from flask import Flask
+import gae_mini_profiler.profiler
+import gae_mini_profiler.templatetags
 
 application = Flask(__name__)
+err = application.errorhandler
+route = application.route
+
+options = application.create_jinja_environment()
+
+application.jinja_env.globals['profiler_includes'] = gae_mini_profiler.templatetags.profiler_includes
+application = gae_mini_profiler.profiler.ProfilerWSGIMiddleware(application)
+application.errorhandler = err
+application.route = route
 
 # A singleton shared across requests
 class App(object):
