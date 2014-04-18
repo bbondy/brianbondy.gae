@@ -94,7 +94,7 @@ def post_comment(news_item_id=None, comment_id=None):
   if comment_id:
     comment = NewsItemComment.get_by_id(comment_id)
     comment.is_public = False
-    if users.get_current_user():
+    if users.is_current_user_admin():
       if ('is_public' in request.json):
         comment.is_public = request.json['is_public'];
 
@@ -142,7 +142,7 @@ def post_comment(news_item_id=None, comment_id=None):
 
 # Does nothing if the user is not authenticated
 def delete_news_item(news_item_id):
-  if not users.get_current_user():
+  if not users.is_current_user_admin():
     abort(401)
   # Don't use get_by_id here since this can be a draft and that function
   # doesn't return draft items
@@ -152,7 +152,7 @@ def delete_news_item(news_item_id):
   return Response(json.dumps({}),  mimetype='application/json')
 
 def post_news_item(news_item_id=None):
-  if not users.get_current_user():
+  if not users.is_current_user_admin():
     abort(401)
 
   if news_item_id:
@@ -187,7 +187,7 @@ def post_news_item(news_item_id=None):
 
 # Returns an empty array if the user is not authorized to view all comments at once
 def get_all_comments():
-  if not users.get_current_user():
+  if not users.is_current_user_admin():
     abort(401)
 
   news_item_comments = NewsItemComment.all().order('-posted_date')
@@ -196,7 +196,7 @@ def get_all_comments():
 
 # Does nothing if the user is not authenticated
 def delete_comment(comment_id):
-  if not users.get_current_user():
+  if not users.is_current_user_admin():
     abort(401)
 
   comment = NewsItemComment.get_by_id(int(comment_id))
