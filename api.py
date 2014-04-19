@@ -193,7 +193,7 @@ def get_all_comments():
     abort(401)
 
   news_item_comments = NewsItemComment.all().order('-posted_date')
-  p = [x.allJSONData for x in news_item_comments]
+  p = [x.adminJSONData for x in news_item_comments]
   return Response(json.dumps(p),  mimetype='application/json')
 
 # Does nothing if the user is not authenticated

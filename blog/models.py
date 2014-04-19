@@ -242,7 +242,7 @@ class NewsItemComment(BaseModel):
     m.update(self.email.strip().lower())
     return m.hexdigest()
 
-  def getAllJSONData(self):
+  def getAdminJSONData(self):
     return { 'id': self.id(),
              'name': self.name,
              'homepage': self.homepage,
@@ -250,11 +250,10 @@ class NewsItemComment(BaseModel):
              'emailHash': self.getEmailHash(),
              'body': self.body,
              'posted_date': str(self.posted_date),
-             'news_item_id': str(self.news_item.id()),
              'is_public': self.is_public,
              'poster_ip': self.poster_ip
            }
-  allJSONData = property(getAllJSONData)
+  adminJSONData = property(getAdminJSONData)
 
   def getJSONData(self):
     return { 'id': self.id(),
