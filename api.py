@@ -56,11 +56,13 @@ def get_news_items_uncached(drafts=False, page=1, order_by=None, tag='', recentl
     news_items = NewsItem.get_all(page_index, count, order_by=order_by)
   news_items = list(news_items)
 
-  if 'noBody' in request.args:
-    for news_item in news_items:
-      news_item.body = ''
+  # Getting tags from the getJsonData function is expensive when fetching a lot
+  # of news items, so don't get tags when not needed.
+  if 'noTags' in request.args:
+    p = [x.jsonDataNoTags for x in news_items]
+  else:
+    p = [x.jsonData for x in news_items]
 
-  p = [x.jsonData for x in news_items]
   return Response(json.dumps(p, default=dthandler),  mimetype='application/json')
 
 def get_news_item(id):

@@ -32,6 +32,17 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
   }
   jsonData = property(getJSONData)
 
+  def getJSONDataNoTags(self):
+    return { 'id': self.id(),
+             'title': self.title,
+             'body': self.body,
+             'posted_date': str(self.posted_date),
+             'last_modified_date': str(self.last_modified_date),
+             'draft': self.draft,
+             'tags':  []
+  }
+  jsonDataNoTags = property(getJSONDataNoTags)
+
 
   def clearTags(self):
     #Delete any associated tags so far
