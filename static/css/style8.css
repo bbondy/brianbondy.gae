@@ -69,7 +69,6 @@ body  {
 #header { 
   width: 920px;
   height: 50px;
-  /*background-color: #92B2CF;*/
   padding-top: 10px;
   padding-left: 20px;
   font-size: 25px;
@@ -81,12 +80,17 @@ body  {
 #header-media-icons
 {
   text-align: right;
-  letter-spacing:5px;
   color: #f00;
   display: inline;
   float: right;
   margin-top: 8px;
   margin-bottom:5px;
+}
+
+#header-media-icons a
+{
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 #header-text
