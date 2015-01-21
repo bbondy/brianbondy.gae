@@ -195,7 +195,7 @@ class NewsItem(BaseModel):#Which in turn dervies from GAE's db.Model
       items = []
     )
 
-    count_to_get = 30
+    count_to_get = 40
     if(tagged == ''):
       news_list = NewsItem.all() \
         .filter('draft', False) \
