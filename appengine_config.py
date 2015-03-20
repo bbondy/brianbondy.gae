@@ -1,9 +1,10 @@
 import logging
 
 def appstats_should_record(env):
-  from gae_mini_profiler.config import should_profile
-  if should_profile():
-      return True
+  #from gae_mini_profiler.config import should_profile
+  #if should_profile():
+  #    return True
+  return False
 
 def gae_mini_profiler_should_profile_production():
   from google.appengine.api import users
