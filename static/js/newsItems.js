@@ -4,7 +4,8 @@
 
  'use strict';
 
-define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models, React, Showdown, commentCtrls) {
+define(['jquery', 'models', 'react', 'showdown', 'comments'],
+    function($, models, React, Showdown, commentCtrls) {
 
   var converter = new Showdown.converter();
   var CommentsView = commentCtrls.CommentsView;
@@ -18,13 +19,11 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
     render: function() {
       var nodes = this.props.tags.map(function (tag) {
         var tagURL = '/blog/tagged/' + tag;
-        return <a href={tagURL} className='post-tag' rel='tag'>{tag}</a>  
+        return <a href={tagURL} className='post-tag' rel='tag'>{tag}</a>;
       });
-      return (
-        <p> Tags:
-          {nodes}
-        </p>
-      );
+      return <p> Tags:
+        {nodes}
+      </p>;
     }
   });
 
@@ -54,7 +53,9 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
         newsItems.url += '?count=' + count;
       }
 
-      return { newsItems: newsItems };
+      return {
+          newsItems: newsItems
+      };
     },
 
     loadFromServer: function() {
@@ -71,20 +72,16 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
 
     render: function() {
       var nodes = this.state.newsItems.map(function (newsItem) {
-        return <NewsItemView
-                 newsItem={newsItem}
-               />;
+        return <NewsItemView newsItem={newsItem}/>;
       });
-      return (
-        <div className='newsItems'>
-          {nodes}
-        </div>
-      );
+      return <div className='newsItems'>
+        {nodes}
+      </div>;
     }
   });
 
   function slugify(str) {
-   return str.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+    return str.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
   }
 
   /**
@@ -115,23 +112,27 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
       var title = n.get('title');
       var url = '/blog/id/' + n.get('id') + '/' + slugify(n.get('title'));
       var postedDate = n.get('posted_date');
-      if (_.isString(postedDate)) { 
+      if (_.isString(postedDate)) {
         postedDate = new Date(Date.parse(n.get('posted_date').split(' ')[0].replace(/-/g, '/')));
       }
-      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       var postedMonth = months[postedDate.getMonth()];
       var rawBody = converter.makeHtml(n.get('body'));
       var lastModifiedDate = n.get('last_modified_date');
       if (_.isString(lastModifiedDate)) {
-        lastModifiedDate = new Date(Date.parse(n.get('last_modified_date').split(' ')[0].replace(/-/g, '/')));
+        lastModifiedDate = new Date(Date.parse(n.get('last_modified_date')
+            .split(' ')[0].replace(/-/g, '/')));
       }
-      var lastModifiedTime = lastModifiedDate.getHours() + ':' + lastModifiedDate.getMinutes() + ':' + lastModifiedDate.getSeconds();
+      var lastModifiedTime = lastModifiedDate.getHours() + ':' +
+          lastModifiedDate.getMinutes() + ':' +
+          lastModifiedDate.getSeconds();
       var lastModifiedMonth = months[lastModifiedDate.getMonth()];
-      var lastModifiedStr = lastModifiedMonth + ' ' + lastModifiedDate.getDate() + ' ' + lastModifiedDate.getFullYear();
+      var lastModifiedStr = lastModifiedMonth + ' ' +
+          lastModifiedDate.getDate() + ' ' +
+          lastModifiedDate.getFullYear();
 
-      return (
-
-        <div id='post'>
+      return <div id='post'>
           <div id='post-date'>
             <div id='post-month'>
               <span>{postedMonth}</span>
@@ -161,12 +162,8 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
             <CommentForm newsItemId={n.get('id')}/>
             <CommentsView newsItemId={n.get('id')}/>
           </div>
-
-
-        </div>
-      );
+        </div>;
     }
-
   });
 
   if (newsItemId) {
@@ -181,6 +178,6 @@ define(['jquery', 'models', 'react', 'showdown', 'comments'], function($, models
     );
   }
 
- return NewsItemsView;
+  return NewsItemsView;
 });
 
