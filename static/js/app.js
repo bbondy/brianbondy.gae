@@ -1,5 +1,5 @@
 require.config({
-  baseUrl: '/static/js/build4/',
+  baseUrl: '/static/js/build5/',
   shim: {
     'backbone': {
       deps: ['underscore', 'jquery'],
